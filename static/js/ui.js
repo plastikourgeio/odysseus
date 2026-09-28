@@ -534,6 +534,17 @@ export function autoResize(textarea) {
   let clone = textarea._resizeClone;
   if (!clone) {
     clone = textarea.cloneNode(false);
+
+    // Measurement-only clone: it must not duplicate the real composer's
+    // DOM identity or participate in forms/accessibility.
+    clone.removeAttribute('id');
+    clone.setAttribute('name', '__odysseus_resize_measure__');
+    clone.removeAttribute('required');
+    clone.removeAttribute('autofocus');
+    clone.removeAttribute('autocomplete');
+    clone.setAttribute('aria-hidden', 'true');
+    clone.tabIndex = -1;
+
     clone.style.cssText = getComputedStyle(textarea).cssText;
     clone.style.position = 'absolute';
     clone.style.visibility = 'hidden';

@@ -59,7 +59,7 @@ class AITTSManager {
                 }
             } else if (this.available) {
                 this.useBrowserTTS = false;
-            } else {
+            } else if (stats.provider && stats.provider !== 'disabled') {
                 console.warn('TTS: not available');
             }
         } catch (error) {

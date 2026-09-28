@@ -75,6 +75,11 @@ function onSettingsPanelActivated(tab) {
 }
 
 function openAdminSettingsTab(tab) {
+  // Never initialize or open admin-managed Settings for a regular user.
+  // Backend authorization remains authoritative; this prevents the frontend
+  // from generating avoidable 403 requests to admin-only endpoints.
+  if (!window._isAdmin) return false;
+
   if (window.adminModule && typeof window.adminModule.open === 'function') {
     window.adminModule.open(tab);
     return true;
@@ -146,9 +151,39 @@ const _aiEndpointRefreshers = new Set();
 let _aiEndpointRefreshInFlight = null;
 
 async function _fetchModelEndpoints() {
-  const epRes = await fetch('/api/model-endpoints', { credentials: 'same-origin' });
-  const endpoints = await epRes.json();
-  return Array.isArray(endpoints) ? endpoints : [];
+  // User-facing Settings must use the same owner-scoped model inventory as
+  // the main model picker. /api/model-endpoints is intentionally Admin-only.
+  const res = await fetch('/api/models?background=false', {
+    credentials: 'same-origin'
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to load user models (${res.status})`);
+  }
+
+  const payload = await res.json();
+  const items = Array.isArray(payload && payload.items) ? payload.items : [];
+
+  // Normalize /api/models items to the endpoint shape already consumed by
+  // the AI Defaults widgets in this file.
+  return items
+    .filter(function(item) {
+      return item && item.endpoint_id;
+    })
+    .map(function(item) {
+      return {
+        id: item.endpoint_id,
+        name: item.endpoint_name || item.endpoint_id,
+        base_url: item.url || '',
+        is_enabled: true,
+        models: Array.isArray(item.models) ? item.models : [],
+        online: !item.offline,
+        status: item.offline ? 'offline' : 'online',
+        model_type: item.model_type || 'llm',
+        endpoint_kind: item.endpoint_kind || '',
+        category: item.category || ''
+      };
+    });
 }
 
 function _endpointLabel(ep) {
@@ -401,24 +436,60 @@ async function initDefaultChat() {
   }
 
   try {
-    var res = await fetch('/api/auth/settings', { credentials: 'same-origin' });
-    var settings = await res.json();
-    if (settings.default_endpoint_id) epSel.value = settings.default_endpoint_id;
-    refreshModels(settings.default_model || '');
-  } catch (e) { console.warn('Failed to load default chat settings', e); }
+    var res = await fetch('/api/default-chat', { credentials: 'same-origin' });
+    if (!res.ok) {
+      throw new Error('Default chat load failed (' + res.status + ')');
+    }
+
+    var dc = await res.json();
+
+    if (dc.endpoint_id) epSel.value = dc.endpoint_id;
+    refreshModels(dc.model || '');
+  } catch (e) {
+    console.warn('Failed to load default chat settings', e);
+  }
 
   epSel.addEventListener('change', function() { refreshModels(''); saveDefault(); });
   modelSel.addEventListener('change', saveDefault);
 
   async function saveDefault() {
     try {
-      await _postSettings({
-        default_endpoint_id: epSel.value,
-        default_model: modelSel.value
+      var res = await fetch('/api/default-chat', {
+        method: 'PUT',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          endpoint_id: epSel.value,
+          model: modelSel.value
+        })
       });
-      msg.textContent = 'Saved'; msg.style.color = 'var(--fg)';
+
+      if (!res.ok) {
+        var detail = await res.text();
+        throw new Error(
+          'Default chat save failed (' + res.status + '): ' + detail
+        );
+      }
+
+      var dc = await res.json();
+
+      // Keep New Chat's frontend cache in sync immediately.
+      try {
+        window.__odysseusDefaultChat = dc;
+        localStorage.setItem(
+          'odysseus-default-chat-cache',
+          JSON.stringify(dc)
+        );
+      } catch (_) {}
+
+      msg.textContent = 'Saved';
+      msg.style.color = 'var(--fg)';
       setTimeout(function() { msg.textContent = ''; }, 2000);
-    } catch (e) { msg.textContent = 'Failed to save'; msg.style.color = 'var(--red)'; }
+    } catch (e) {
+      console.error('Failed to save default chat', e);
+      msg.textContent = 'Failed to save';
+      msg.style.color = 'var(--red)';
+    }
   }
 
   _registerAiEndpointRefresh(function(endpoints) {
@@ -763,8 +834,7 @@ async function initTtsSettings() {
 
   var ttsKeywords = ['tts', 'audio'];
   try {
-    var epRes = await fetch('/api/model-endpoints', { credentials: 'same-origin' });
-    var endpoints = await epRes.json();
+    var endpoints = await _fetchModelEndpoints();
     endpoints.forEach(function(ep) {
       if (!ep.is_enabled) return;
       var hasTTS = (ep.models || []).some(m => ttsKeywords.some(kw => m.toLowerCase().includes(kw)));
@@ -931,8 +1001,7 @@ async function initSttSettings() {
 
   // Add API endpoints that might support STT
   try {
-    var epRes = await fetch('/api/model-endpoints', { credentials: 'same-origin' });
-    var endpoints = await epRes.json();
+    var endpoints = await _fetchModelEndpoints();
     endpoints.forEach(function(ep) {
       if (!ep.is_enabled) return;
       var opt = document.createElement('option'); opt.value = 'endpoint:' + ep.id; opt.textContent = ep.name + ' (API)'; provSel.appendChild(opt);
@@ -2189,11 +2258,11 @@ function initAll() {
   initAppearance();
   initShortcuts();
   initAccount();
-  initIntegrations();
+  if (window._isAdmin) initIntegrations();
   initEmailSettings();
   initEmailAccountsSettings();
   initReminderSettings();
-  initUnifiedIntegrations();
+  if (window._isAdmin) initUnifiedIntegrations();
 }
 
 function notifyIntegrationsChanged() {
@@ -2282,7 +2351,7 @@ async function initReminderSettings() {
   // Detect whether ntfy integration exists — try admin endpoint, fall back to
   // checking if an ntfy integration was saved in settings (non-admin users).
   let ntfyConfigured = false;
-  try {
+  if (window._isAdmin) try {
     const res = await fetch('/api/auth/integrations', { credentials: 'same-origin' });
     if (res.ok) {
       const data = await res.json();
@@ -2309,7 +2378,7 @@ async function initReminderSettings() {
   // The user picks which integration to target and supplies a payload template.
   let allIntegrations = [];
   let webhookConfigured = false;
-  try {
+  if (window._isAdmin) try {
     const res = await fetch('/api/auth/integrations', { credentials: 'same-origin' });
     if (res.ok) {
       const data = await res.json();
@@ -2379,7 +2448,7 @@ async function initReminderSettings() {
     smtpConfigured = emailAccounts.length > 0;
 
     ntfyConfigured = false;
-    try {
+    if (window._isAdmin) try {
       const res = await fetch('/api/auth/integrations', { credentials: 'same-origin' });
       if (res.ok) {
         const data = await res.json();
@@ -3011,8 +3080,8 @@ async function initEmailSettings() {
     if (el('set-email-from')) el('set-email-from').value = cfg.from_address || '';
   } catch (_) {}
 
-  // Load contacts config
-  try {
+  // Contacts/CardDAV configuration is admin-managed.
+  if (window._isAdmin) try {
     const res = await fetch('/api/contacts/config');
     const cfg = await res.json();
     if (el('set-carddav-url')) el('set-carddav-url').value = cfg.url || '';
@@ -5576,6 +5645,10 @@ function syncAdminVisibility() {
   modalEl.querySelectorAll('.admin-only').forEach(el => {
     el.style.display = isAdmin ? '' : 'none';
   });
+
+  modalEl.querySelectorAll('[data-settings-tab="integrations"], [data-settings-panel="integrations"], #set-reminders-open-integrations').forEach(el => {
+    el.style.display = isAdmin ? '' : 'none';
+  });
 }
 
 /* ═══════════════════════════════════════════
@@ -5583,6 +5656,7 @@ function syncAdminVisibility() {
    ═══════════════════════════════════════════ */
 export function open(tab) {
   if (!initialized) initAll();
+  if (!window._isAdmin && tab === 'integrations') tab = 'email';
 
   syncAppearanceCheckboxes();
   showSettingsModal(modalEl);
@@ -5598,7 +5672,7 @@ export function open(tab) {
   onSettingsPanelActivated(activeTab);
 
   // Auto-init admin data if showing an admin tab.
-  if (isAdminManagedSettingsTab(activeTab) && window.adminModule && !window.adminModule._initialized) {
+  if (!!window._isAdmin && isAdminManagedSettingsTab(activeTab) && window.adminModule && !window.adminModule._initialized) {
     window.adminModule._initData();
   }
 }

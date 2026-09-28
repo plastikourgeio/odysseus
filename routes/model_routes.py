@@ -2424,6 +2424,10 @@ def setup_model_routes(model_discovery):
             _user = _gcu(request) or ""
         except Exception:
             _user = ""
+
+        if not _user and not _auth_disabled():
+            raise HTTPException(401, "Not authenticated")
+
         # Admins resolve via the global defaults (they own them, and the
         # scoped resolution was making the picker disappear for them).
         # Regular users get per-user prefs with NO global fallback for the
@@ -2491,6 +2495,110 @@ def setup_model_routes(model_discovery):
             return {"endpoint_id": ep.id, "endpoint_url": chat_url, "model": model}
         finally:
             db.close()
+
+    @router.put("/default-chat")
+    async def set_default_chat(request: Request):
+        """Persist the default chat selection in the same scope used by
+        GET /api/default-chat.
+
+        Admins and auth-disabled single-user mode use global app settings.
+        Regular authenticated users use their own per-user preferences.
+        """
+        from src.auth_helpers import get_current_user as _gcu
+        from routes.prefs_routes import _load_for_user, _save_for_user
+        from src.settings import (
+            load_settings as _load_app_settings,
+            save_settings as _save_app_settings,
+        )
+
+        try:
+            body = await request.json()
+        except Exception:
+            raise HTTPException(400, "Invalid JSON body")
+
+        if not isinstance(body, dict):
+            raise HTTPException(400, "Invalid JSON body")
+
+        ep_id = str(
+            body.get("endpoint_id")
+            or body.get("default_endpoint_id")
+            or ""
+        ).strip()
+
+        model = str(
+            body.get("model")
+            or body.get("default_model")
+            or ""
+        ).strip()
+
+        if not ep_id or not model:
+            raise HTTPException(400, "endpoint_id and model are required")
+
+        try:
+            user = _gcu(request) or ""
+        except Exception:
+            user = ""
+
+        if not user and not _auth_disabled():
+            raise HTTPException(401, "Not authenticated")
+
+        is_admin = False
+        try:
+            auth_mgr = getattr(request.app.state, "auth_manager", None)
+            if (
+                user
+                and auth_mgr is not None
+                and getattr(auth_mgr, "is_admin", None)
+            ):
+                is_admin = bool(auth_mgr.is_admin(user))
+        except Exception:
+            is_admin = False
+
+        # Validate that the selected endpoint is enabled and belongs to the
+        # caller's visible scope. Admins may select from the global pool.
+        db = SessionLocal()
+        try:
+            q = db.query(ModelEndpoint).filter(
+                ModelEndpoint.id == ep_id,
+                ModelEndpoint.is_enabled == True,
+            )
+
+            if user and not is_admin:
+                q = owner_filter(q, ModelEndpoint, user)
+
+            ep = q.first()
+
+            if not ep:
+                raise HTTPException(
+                    404,
+                    "Endpoint not found or not available to this user",
+                )
+
+            base = _normalize_base(ep.base_url)
+            kind = _effective_endpoint_kind(ep, base)
+            visible, _pinned = _picker_models_for_endpoint(ep, base, kind)
+
+            if visible and model not in visible:
+                raise HTTPException(
+                    400,
+                    "Model is not available on the selected endpoint",
+                )
+        finally:
+            db.close()
+
+        if user and not is_admin:
+            prefs = _load_for_user(user) or {}
+            prefs["default_endpoint_id"] = ep_id
+            prefs["default_model"] = model
+            _save_for_user(user, prefs)
+        else:
+            settings = _load_app_settings()
+            settings["default_endpoint_id"] = ep_id
+            settings["default_model"] = model
+            _save_app_settings(settings)
+
+        # Return the authoritative value exactly as New Chat will resolve it.
+        return get_default_chat(request)
 
     @router.patch("/model-endpoints/{ep_id}")
     async def toggle_model_endpoint(ep_id: str, request: Request):

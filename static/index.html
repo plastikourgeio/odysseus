@@ -357,7 +357,7 @@
               <span style="flex:1"></span>
               <button id="memory-import-btn" class="theme-io-btn" title="Import memories from a file" style="height:26px;font-size:12px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Import</button>
               <button id="memory-export-btn" class="theme-io-btn" title="Export all memories as JSON" style="height:26px;font-size:12px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Export</button>
-              <input type="file" id="memory-import-file" accept=".txt,.md,.pdf,.csv,.log,.json,.py,.js,.html" hidden />
+              <input type="file" id="memory-import-file" accept=".txt,.md,.pdf,.csv,.log,.json,.py,.js,.html" hidden / aria-label="Import memory file">
             </div>
             <p class="memory-desc doclib-desc" style="margin:4px 0 6px;">
               Import a <code>.txt</code>, <code>.md</code>, <code>.pdf</code>, <code>.csv</code>, <code>.log</code>, <code>.json</code>, <code>.py</code>, <code>.js</code>, or <code>.html</code> file &mdash; the AI reads it and suggests candidate memories you can approve.
@@ -417,7 +417,7 @@
             <p class="memory-desc doclib-desc" style="margin-top:6px;">Reusable procedures the AI can call via /skill — sort by confidence to surface the proven ones.</p>
             <div class="memory-toolbar">
               <div class="memory-toolbar-row">
-                <select id="skills-sort" class="memory-sort-select">
+                <select id="skills-sort" class="memory-sort-select" aria-label="Sort skills">
                   <optgroup label="Sort">
                     <option value="sort:confidence">Confidence</option>
                     <option value="sort:uses">Most used</option>
@@ -481,7 +481,7 @@
               <span class="admin-toggle-sub" style="margin:0">Minimum confidence</span>
               <span style="display:flex;align-items:center;gap:8px;flex-shrink:0">
                 <span id="skill-confidence-label" class="admin-toggle-sub" style="margin:0;min-width:42px;text-align:right;font-variant-numeric:tabular-nums">&ge; 85%</span>
-                <input type="range" id="skill-confidence-slider" class="preset-range" min="50" max="100" step="5" value="85" style="width:120px;margin:0" />
+                <input type="range" id="skill-confidence-slider" class="preset-range" min="50" max="100" step="5" value="85" style="width:120px;margin:0" / aria-label="Skill confidence threshold">
               </span>
             </div>
           </div>
@@ -535,12 +535,12 @@
       <div class="admin-card">
         <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;opacity:0.6"><path d="M9.06 11.9l-3.5 3.5a2.85 2.85 0 1 0 4.03 4.03l8.49-8.49a4.5 4.5 0 1 0-6.36-6.36L3.18 12.62"/><path d="M14 7l3 3"/></svg>Colors</h2>
         <div class="theme-custom" id="themeCustom">
-          <div class="color-row"><label>Background</label><input type="color" id="clr-bg"><button class="color-reset-btn" data-reset="bg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
-          <div class="color-row"><label>Text</label><input type="color" id="clr-fg"><button class="color-reset-btn" data-reset="fg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
-          <div class="color-row"><label>Panel</label><input type="color" id="clr-panel"><button class="color-reset-btn" data-reset="panel" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
-          <div class="color-row"><label>Sidebar</label><input type="color" id="adv-sidebarBg"><button class="color-reset-btn" data-reset-adv="sidebarBg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
-          <div class="color-row"><label>Border</label><input type="color" id="clr-border"><button class="color-reset-btn" data-reset="border" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
-          <div class="color-row"><label>Accent</label><input type="color" id="clr-red"><button class="color-reset-btn" data-reset="red" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+          <div class="color-row"><label for="clr-bg">Background</label><input type="color" id="clr-bg" aria-label="Background color"><button class="color-reset-btn" data-reset="bg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+          <div class="color-row"><label for="clr-fg">Text</label><input type="color" id="clr-fg" aria-label="Foreground text color"><button class="color-reset-btn" data-reset="fg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+          <div class="color-row"><label for="clr-panel">Panel</label><input type="color" id="clr-panel" aria-label="Panel color"><button class="color-reset-btn" data-reset="panel" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+          <div class="color-row"><label for="adv-sidebarBg">Sidebar</label><input type="color" id="adv-sidebarBg" aria-label="Sidebar background color"><button class="color-reset-btn" data-reset-adv="sidebarBg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+          <div class="color-row"><label for="clr-border">Border</label><input type="color" id="clr-border" aria-label="Border color"><button class="color-reset-btn" data-reset="border" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+          <div class="color-row"><label for="clr-red">Accent</label><input type="color" id="clr-red" aria-label="Error color"><button class="color-reset-btn" data-reset="red" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
         </div>
       </div>
       <div class="theme-adv-toggle" id="theme-adv-toggle">
@@ -550,38 +550,38 @@
         <div class="theme-adv-group">
           <div class="theme-adv-group-label">Chat Bubbles</div>
           <div class="theme-custom">
-            <div class="color-row"><label>User Chat Bubble</label><input type="color" id="adv-userBubbleBg"><button class="color-reset-btn" data-reset-adv="userBubbleBg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
-            <div class="color-row"><label>AI Chat Bubble</label><input type="color" id="adv-aiBubbleBg"><button class="color-reset-btn" data-reset-adv="aiBubbleBg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
-            <div class="color-row"><label>Border Chat Bubble</label><input type="color" id="adv-bubbleBorder"><button class="color-reset-btn" data-reset-adv="bubbleBorder" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+            <div class="color-row"><label for="adv-userBubbleBg">User Chat Bubble</label><input type="color" id="adv-userBubbleBg" aria-label="User message bubble background"><button class="color-reset-btn" data-reset-adv="userBubbleBg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+            <div class="color-row"><label for="adv-aiBubbleBg">AI Chat Bubble</label><input type="color" id="adv-aiBubbleBg" aria-label="AI message bubble background"><button class="color-reset-btn" data-reset-adv="aiBubbleBg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+            <div class="color-row"><label for="adv-bubbleBorder">Border Chat Bubble</label><input type="color" id="adv-bubbleBorder" aria-label="Message bubble border color"><button class="color-reset-btn" data-reset-adv="bubbleBorder" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
           </div>
         </div>
         <div class="theme-adv-group">
           <div class="theme-adv-group-label">Sidebar</div>
           <div class="theme-custom">
-            <div class="color-row"><label>Odysseus Logo</label><input type="color" id="adv-brandColor"><button class="color-reset-btn" data-reset-adv="brandColor" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
-            <div class="color-row"><label title="Hamburger menu"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="vertical-align:-2px;"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label><input type="color" id="adv-hamburgerColor"><button class="color-reset-btn" data-reset-adv="hamburgerColor" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+            <div class="color-row"><label for="adv-brandColor">Odysseus Logo</label><input type="color" id="adv-brandColor" aria-label="Brand color"><button class="color-reset-btn" data-reset-adv="brandColor" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+            <div class="color-row"><label title="Hamburger menu" for="adv-hamburgerColor"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="vertical-align:-2px;"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label><input type="color" id="adv-hamburgerColor" aria-label="Menu icon color"><button class="color-reset-btn" data-reset-adv="hamburgerColor" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
           </div>
         </div>
         <div class="theme-adv-group">
           <div class="theme-adv-group-label">Chat Input / Prompt Area</div>
           <div class="theme-custom">
-            <div class="color-row"><label>Input Bg</label><input type="color" id="adv-inputBg"><button class="color-reset-btn" data-reset-adv="inputBg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
-            <div class="color-row"><label>Input Border</label><input type="color" id="adv-inputBorder"><button class="color-reset-btn" data-reset-adv="inputBorder" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
-            <div class="color-row"><label>Send Btn</label><input type="color" id="adv-sendBtnBg"><button class="color-reset-btn" data-reset-adv="sendBtnBg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
-            <div class="color-row"><label>Send Hover</label><input type="color" id="adv-sendBtnHover"><button class="color-reset-btn" data-reset-adv="sendBtnHover" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+            <div class="color-row"><label for="adv-inputBg">Input Bg</label><input type="color" id="adv-inputBg" aria-label="Input background color"><button class="color-reset-btn" data-reset-adv="inputBg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+            <div class="color-row"><label for="adv-inputBorder">Input Border</label><input type="color" id="adv-inputBorder" aria-label="Input border color"><button class="color-reset-btn" data-reset-adv="inputBorder" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+            <div class="color-row"><label for="adv-sendBtnBg">Send Btn</label><input type="color" id="adv-sendBtnBg" aria-label="Send button background color"><button class="color-reset-btn" data-reset-adv="sendBtnBg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+            <div class="color-row"><label for="adv-sendBtnHover">Send Hover</label><input type="color" id="adv-sendBtnHover" aria-label="Send button hover color"><button class="color-reset-btn" data-reset-adv="sendBtnHover" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
           </div>
         </div>
         <div class="theme-adv-group">
           <div class="theme-adv-group-label">Code Blocks</div>
           <div class="theme-custom">
-            <div class="color-row"><label>Code Bg</label><input type="color" id="adv-codeBg"><button class="color-reset-btn" data-reset-adv="codeBg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
-            <div class="color-row"><label>Code Text</label><input type="color" id="adv-codeFg"><button class="color-reset-btn" data-reset-adv="codeFg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+            <div class="color-row"><label for="adv-codeBg">Code Bg</label><input type="color" id="adv-codeBg" aria-label="Code block background color"><button class="color-reset-btn" data-reset-adv="codeBg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+            <div class="color-row"><label for="adv-codeFg">Code Text</label><input type="color" id="adv-codeFg" aria-label="Code block text color"><button class="color-reset-btn" data-reset-adv="codeFg" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
           </div>
         </div>
         <div class="theme-adv-group">
           <div class="theme-adv-group-label">Controls</div>
           <div class="theme-custom">
-            <div class="color-row"><label>Toggle On</label><input type="color" id="adv-toggleActive"><button class="color-reset-btn" data-reset-adv="toggleActive" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
+            <div class="color-row"><label for="adv-toggleActive">Toggle On</label><input type="color" id="adv-toggleActive" aria-label="Active toggle color"><button class="color-reset-btn" data-reset-adv="toggleActive" title="Reset this color" aria-label="Reset color">&#x21BA;</button></div>
           </div>
         </div>
         <div class="theme-adv-group">
@@ -595,15 +595,15 @@
         <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="10" cy="20" r="2.5"/></svg>Color Harmony</h2>
         <div class="theme-harmony-row">
           <div class="theme-fd-group">
-            <label class="theme-fd-label">Accent Color</label>
+            <label class="theme-fd-label" for="harmony-accent">Accent Color</label>
             <div class="color-row" style="justify-content:flex-start;gap:8px;">
-              <input type="color" id="harmony-accent" value="#e06c75">
+              <input type="color" id="harmony-accent" value="#e06c75" aria-label="Theme harmony accent color">
               <span id="harmony-accent-hex" style="font-size:11px;opacity:0.65;font-family:ui-monospace,monospace;letter-spacing:0.02em;">#e06c75</span>
             </div>
           </div>
           <div class="theme-fd-group">
-            <label class="theme-fd-label">Harmony</label>
-            <select id="harmony-type" class="theme-fd-select">
+            <label class="theme-fd-label" for="harmony-type">Harmony</label>
+            <select id="harmony-type" class="theme-fd-select" aria-label="Theme color harmony">
               <option value="complementary">Complementary</option>
               <option value="analogous">Analogous</option>
               <option value="triadic">Triadic</option>
@@ -613,8 +613,8 @@
         </div>
         <div class="theme-harmony-row" style="margin-top:6px;">
           <div class="theme-fd-group">
-            <label class="theme-fd-label">Mode</label>
-            <select id="harmony-mode" class="theme-fd-select">
+            <label class="theme-fd-label" for="harmony-mode">Mode</label>
+            <select id="harmony-mode" class="theme-fd-select" aria-label="Theme harmony mode">
               <option value="dark">Dark</option>
               <option value="light">Light</option>
             </select>
@@ -629,7 +629,7 @@
         <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;opacity:0.6"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>Font & Layout</h2>
         <div class="theme-fd-row">
           <div class="theme-fd-group">
-            <label class="theme-fd-label">Font</label>
+            <label class="theme-fd-label" for="theme-font-select">Font</label>
             <select id="theme-font-select" class="theme-fd-select" aria-label="Font">
               <option value="mono">Monospace</option>
               <option value="sans">Sans-serif</option>
@@ -638,7 +638,7 @@
             </select>
           </div>
           <div class="theme-fd-group">
-            <label class="theme-fd-label">Density</label>
+            <label class="theme-fd-label" for="theme-density-select">Density</label>
             <select id="theme-density-select" class="theme-fd-select" aria-label="Density">
               <option value="compact">Compact</option>
               <option value="comfortable">Comfortable</option>
@@ -646,7 +646,7 @@
             </select>
           </div>
           <div class="theme-fd-group">
-            <label class="theme-fd-label">Text size</label>
+            <label class="theme-fd-label" for="theme-text-size-select">Text size</label>
             <select id="theme-text-size-select" class="theme-fd-select" aria-label="Text size">
               <option value="100">Default</option>
               <option value="125">Larger</option>
@@ -662,8 +662,8 @@
         </div>
         <div class="theme-fd-row">
           <div class="theme-fd-group" style="flex:1 1 0;">
-            <label class="theme-fd-label">Background / Effect</label>
-            <select id="theme-bg-pattern-select" class="theme-fd-select">
+            <label class="theme-fd-label" for="theme-bg-pattern-select">Background / Effect</label>
+            <select id="theme-bg-pattern-select" class="theme-fd-select" aria-label="Background pattern">
               <option value="none">Solid</option>
               <option value="dots">Dots</option>
               <option value="synapse">Synapse</option>
@@ -676,28 +676,28 @@
             </select>
           </div>
           <div class="theme-fd-group" style="flex:0 0 auto;align-items:center;">
-            <label class="theme-fd-label">&nbsp;</label>
+            <label class="theme-fd-label" for="theme-bg-effect-color">&nbsp;</label>
             <div class="color-row" style="margin:0;padding:0;">
-              <input type="color" id="theme-bg-effect-color" value="#9cdef2" title="Effect color">
+              <input type="color" id="theme-bg-effect-color" value="#9cdef2" title="Effect color" aria-label="Background effect color">
               <button class="color-reset-btn" data-reset-effect title="Reset to text color">&#x21BA;</button>
             </div>
           </div>
         </div>
         <div class="theme-fd-row">
           <div class="theme-fd-group" id="theme-bg-intensity-group" style="flex:1 1 0;">
-            <label class="theme-fd-label">Intensity</label>
-            <input type="range" id="theme-bg-intensity" class="theme-fd-range" min="0" max="100" step="5" value="100">
+            <label class="theme-fd-label" for="theme-bg-intensity">Intensity</label>
+            <input type="range" id="theme-bg-intensity" class="theme-fd-range" min="0" max="100" step="5" value="100" aria-label="Background effect intensity">
           </div>
           <div class="theme-fd-group" id="theme-bg-size-group" style="flex:1 1 0;">
-            <label class="theme-fd-label">Size</label>
-            <input type="range" id="theme-bg-size" class="theme-fd-range" min="30" max="250" step="10" value="100">
+            <label class="theme-fd-label" for="theme-bg-size">Size</label>
+            <input type="range" id="theme-bg-size" class="theme-fd-range" min="30" max="250" step="10" value="100" aria-label="Background effect size">
           </div>
         </div>
       </div>
       <div class="admin-card" style="margin-top:8px;">
         <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;opacity:0.6"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Save / Share</h2>
         <div class="theme-save-row" id="theme-save-row">
-          <input type="text" id="theme-save-name" placeholder="Theme name..." maxlength="32">
+          <input type="text" id="theme-save-name" placeholder="Theme name..." maxlength="32" aria-label="Theme name">
           <button id="theme-save-go">Save</button>
         </div>
         <div class="theme-save-error" id="theme-save-error"></div>
@@ -705,7 +705,7 @@
           <button id="theme-import-btn" class="theme-io-btn" title="Import a theme from JSON">&#x2912; Import</button>
           <button id="theme-export-btn" class="theme-io-btn" title="Export current colors as JSON">&#x2913; Export</button>
         </div>
-        <textarea id="theme-import-area" class="theme-import-area hidden" placeholder="Paste theme JSON here..." rows="3"></textarea>
+        <textarea id="theme-import-area" class="theme-import-area hidden" placeholder="Paste theme JSON here..." rows="3" aria-label="Theme JSON"></textarea>
         <div class="theme-import-actions hidden" id="theme-import-actions">
           <button id="theme-import-go" class="theme-io-btn">Apply</button>
           <button id="theme-import-cancel" class="theme-io-btn">Cancel</button>
@@ -809,7 +809,7 @@
           </div>
         </div>
         <div id="session-bulk-bar" class="session-bulk-bar hidden">
-          <span id="session-select-all-dot" style="cursor:pointer;font-size:14px;opacity:0.4;user-select:none;">○</span><input type="checkbox" id="session-select-all" style="display:none;"><span style="font-size:10px;cursor:pointer;opacity:0.5;" id="session-select-all-label">All</span>
+          <span id="session-select-all-dot" style="cursor:pointer;font-size:14px;opacity:0.4;user-select:none;">○</span><input type="checkbox" id="session-select-all" style="display:none;" aria-label="Select all sessions"><span style="font-size:10px;cursor:pointer;opacity:0.5;" id="session-select-all-label">All</span>
           <div style="margin-left:auto;display:flex;gap:2px;align-items:center;">
             <button class="session-bulk-btn" id="session-bulk-archive" title="Archive selected"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg></button>
             <button class="session-bulk-btn session-bulk-btn-danger" id="session-bulk-delete" title="Delete selected"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
@@ -1028,10 +1028,10 @@
     <div id="attach-strip" class="attach-strip"></div>
 
     <!-- Hidden elements for form logic -->
-    <input type="checkbox" id="research-toggle" style="display:none;">
-    <input type="checkbox" id="rag-toggle" style="display:none;">
-    <input type="checkbox" id="incognito-toggle" style="display:none;">
-    <input type="file" id="file-input" class="hidden" multiple />
+    <input type="checkbox" id="research-toggle" style="display:none;" aria-label="Research mode">
+    <input type="checkbox" id="rag-toggle" style="display:none;" aria-label="Retrieval augmented generation">
+    <input type="checkbox" id="incognito-toggle" style="display:none;" aria-label="Incognito mode">
+    <input type="file" id="file-input" class="hidden" multiple / aria-label="Attach file">
 
     <!-- Unified chat input bar -->
     <div class="chat-input-bar">
@@ -1180,7 +1180,7 @@
             <span style="font-size:11px;margin-left:2px;">Group</span>
             <svg class="tool-indicator-x" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
           </button>
-          <input type="checkbox" id="group-toggle" style="display:none;">
+          <input type="checkbox" id="group-toggle" style="display:none;" aria-label="Group mode">
           <!-- Character indicator (hidden until active) -->
           <button type="button" class="input-icon-btn tool-indicator" title="Persona active — click to deactivate" id="character-indicator-btn" style="display:none;">
             <svg id="char-indicator-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -1206,9 +1206,9 @@
         </div>
       </div>
       <!-- Hidden checkboxes for state -->
-      <input type="checkbox" id="web-toggle" style="display:none;">
-      <input type="checkbox" id="bash-toggle" style="display:none;">
-      <input type="checkbox" id="plan-toggle" style="display:none;">
+      <input type="checkbox" id="web-toggle" style="display:none;" aria-label="Web search">
+      <input type="checkbox" id="bash-toggle" style="display:none;" aria-label="Bash tools">
+      <input type="checkbox" id="plan-toggle" style="display:none;" aria-label="Planning mode">
     </div>
     <form id="chat-form" autocomplete="off" action="javascript:void(0);" style="display:none;"></form>
 
@@ -1233,26 +1233,26 @@
               <label for="inject-suffix">Suffix</label>
               <textarea id="inject-suffix" rows="2" placeholder="Added after your message" style="margin-bottom:12px"></textarea>
               <div class="preset-slider-row">
-                <label>Temperature <span class="preset-hint-icon" title="Controls randomness. Lower values give focused, deterministic answers (good for code). Higher values give more creative, varied responses.">?</span></label>
+                <label for="custom-temperature">Temperature <span class="preset-hint-icon" title="Controls randomness. Lower values give focused, deterministic answers (good for code). Higher values give more creative, varied responses.">?</span></label>
                 <span class="preset-slider-value" id="temp-value">1.0</span>
               </div>
-              <input type="range" class="preset-range" id="custom-temperature" min="0" max="2" step="0.1" value="1.0">
+              <input type="range" class="preset-range" id="custom-temperature" min="0" max="2" step="0.1" value="1.0" aria-label="Model temperature">
               <div class="preset-temp-hints">
                 <span>Precise / Code</span>
                 <span>Balanced</span>
                 <span>Creative</span>
               </div>
               <div class="preset-slider-row">
-                <label>Max Tokens <span class="preset-hint-icon" title="Maximum length of the AI response. 'No limit' lets the model decide when to stop.">?</span></label>
+                <label for="custom-max-tokens">Max Tokens <span class="preset-hint-icon" title="Maximum length of the AI response. 'No limit' lets the model decide when to stop.">?</span></label>
                 <span class="preset-slider-value" id="tokens-value">No limit</span>
               </div>
-              <input type="range" class="preset-range" id="custom-max-tokens" min="256" max="8448" step="256" value="8448">
+              <input type="range" class="preset-range" id="custom-max-tokens" min="256" max="8448" step="256" value="8448" aria-label="Maximum output tokens">
             </div>
             <!-- Prompt (character/persona) tab -->
             <div class="preset-chartab" data-chartab-panel="character" style="display:none">
-              <label>Persona</label>
+              <label for="char-template-select">Persona</label>
               <div class="char-name-combo">
-                <select id="char-template-select" class="char-template-select">
+                <select id="char-template-select" class="char-template-select" aria-label="Character template">
                   <option value="">Select persona...</option>
                 </select>
                 <button type="button" id="char-new-btn" class="char-action-btn" title="Create a new persona">+ New</button>
@@ -1533,14 +1533,14 @@
             <div class="admin-toggle-sub" style="margin-bottom:8px">The model used when creating a new chat session.</div>
             <div class="settings-col">
               <div class="settings-row">
-                <label class="settings-label">Endpoint</label>
+                <label class="settings-label" for="set-defaultEpSelect">Endpoint</label>
                 <span class="adm-model-logo" id="set-defaultEpSelect-logo" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex-shrink:0;opacity:0.9;color:var(--fg);"></span>
-                <select id="set-defaultEpSelect" class="settings-select"></select>
+                <select id="set-defaultEpSelect" class="settings-select" aria-label="Default chat endpoint"></select>
               </div>
               <div class="settings-row">
-                <label class="settings-label">Model</label>
+                <label class="settings-label" for="set-defaultModelSelect">Model</label>
                 <span class="adm-model-logo" id="set-defaultModelSelect-logo" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex-shrink:0;opacity:0.9;color:var(--fg);"></span>
-                <select id="set-defaultModelSelect" class="settings-select"></select>
+                <select id="set-defaultModelSelect" class="settings-select" aria-label="Default chat model"></select>
               </div>
               <div id="set-defaultChatMsg" style="font-size:11px;color:color-mix(in srgb, var(--fg) 45%, transparent);"></div>
             </div>
@@ -1550,17 +1550,17 @@
             <div class="admin-toggle-sub" style="margin-bottom:8px">Runs background tasks (compaction, cleanup, auto-naming, retrieving memories from files) on a small/local model instead of your chat model. Leave blank to use the chat model.</div>
             <div class="settings-col">
               <div class="settings-row">
-                <label class="settings-label">Endpoint</label>
+                <label class="settings-label" for="set-utilityEpSelect">Endpoint</label>
                 <span class="adm-model-logo" id="set-utilityEpSelect-logo" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex-shrink:0;opacity:0.9;color:var(--fg);"></span>
-                <select id="set-utilityEpSelect" class="settings-select"><option value="">—</option></select>
+                <select id="set-utilityEpSelect" class="settings-select" aria-label="Utility endpoint"><option value="">—</option></select>
               </div>
               <div class="settings-row">
-                <label class="settings-label">Model</label>
+                <label class="settings-label" for="set-utilityModelSelect">Model</label>
                 <span class="adm-model-logo" id="set-utilityModelSelect-logo" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex-shrink:0;opacity:0.9;color:var(--fg);"></span>
-                <select id="set-utilityModelSelect" class="settings-select"><option value="">—</option></select>
+                <select id="set-utilityModelSelect" class="settings-select" aria-label="Utility model"><option value="">—</option></select>
               </div>
               <div class="settings-row" style="align-items:flex-start;">
-                <label class="settings-label" style="margin-top:6px;">Fallbacks</label>
+                <span class="settings-label" style="margin-top:6px;">Fallbacks</span>
                 <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
                   <div id="set-utilityFallbacks" class="settings-fallbacks"></div>
                   <button type="button" class="settings-fallback-add" id="set-utilityAddFallback" title="Add a model to try if the utility model fails">+ Add fallback</button>
@@ -1574,12 +1574,12 @@
             <div class="admin-toggle-sub" style="margin-bottom:8px">Analyze images with a vision-capable model.</div>
             <div style="display:flex;flex-direction:column;gap:0.5rem;">
               <div style="display:flex;align-items:center;gap:0.75rem;">
-                <label class="settings-label">Model</label>
+                <label class="settings-label" for="set-vlModelSelect">Model</label>
                 <span class="adm-model-logo" id="set-vlModelSelect-logo" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex-shrink:0;opacity:0.9;color:var(--fg);"></span>
-                <select id="set-vlModelSelect" class="settings-select"><option value="">Auto-detect</option></select>
+                <select id="set-vlModelSelect" class="settings-select" aria-label="Vision model"><option value="">Auto-detect</option></select>
               </div>
               <div class="settings-row" style="align-items:flex-start;">
-                <label class="settings-label" style="margin-top:6px;">Fallbacks</label>
+                <span class="settings-label" style="margin-top:6px;">Fallbacks</span>
                 <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
                   <div id="set-visionFallbacks" class="settings-fallbacks"></div>
                   <button type="button" class="settings-fallback-add" id="set-visionAddFallback" title="Add a vision model to try if the one above fails">+ Add fallback</button>
@@ -1593,15 +1593,15 @@
             <div class="admin-toggle-sub" style="margin-bottom:8px">Model used for Deep Research, more settings under <a href="#" data-go-settings-tab="search" style="color:var(--accent, var(--red));text-decoration:underline;font-weight:600;">Search →</a></div>
             <div class="settings-col">
               <div class="settings-row">
-                <label class="settings-label">Endpoint</label>
-                <select id="set-researchEndpoint" class="settings-select">
+                <label class="settings-label" for="set-researchEndpoint">Endpoint</label>
+                <select id="set-researchEndpoint" class="settings-select" aria-label="Research endpoint">
                   <option value="">Same as chat</option>
                 </select>
               </div>
               <div class="settings-row">
-                <label class="settings-label">Model</label>
+                <label class="settings-label" for="set-researchModel">Model</label>
                 <span class="adm-model-logo" id="set-researchModel-logo" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex-shrink:0;opacity:0.9;color:var(--fg);"></span>
-                <select id="set-researchModel" class="settings-select">
+                <select id="set-researchModel" class="settings-select" aria-label="Research model">
                   <option value="">Same as chat</option>
                 </select>
               </div>
@@ -1614,12 +1614,12 @@
             <div class="admin-toggle-sub" style="margin-bottom:8px">Configure which model to use for image generation.</div>
             <div style="display:flex;flex-direction:column;gap:0.5rem;">
               <div style="display:flex;align-items:center;gap:0.75rem;">
-                <label class="settings-label">Model</label>
-                <select id="set-imgModelSelect" class="settings-select"><option value="">Auto-detect</option></select>
+                <label class="settings-label" for="set-imgModelSelect">Model</label>
+                <select id="set-imgModelSelect" class="settings-select" aria-label="Image model"><option value="">Auto-detect</option></select>
               </div>
               <div style="display:flex;align-items:center;gap:0.75rem;">
-                <label class="settings-label">Quality</label>
-                <select id="set-imgQualitySelect" class="settings-select">
+                <label class="settings-label" for="set-imgQualitySelect">Quality</label>
+                <select id="set-imgQualitySelect" class="settings-select" aria-label="Image quality">
                   <option value="low">Low (fastest, cheapest)</option>
                   <option value="medium">Medium (default)</option>
                   <option value="high">High (best quality)</option>
@@ -1636,25 +1636,25 @@
             <div class="admin-toggle-sub" style="margin-bottom:8px">Configure TTS provider for assistant message read-aloud.</div>
             <div style="display:flex;flex-direction:column;gap:0.5rem;">
               <div style="display:flex;align-items:center;gap:0.75rem;">
-                <label class="settings-label">Provider</label>
-                <select id="set-ttsProviderSelect" class="settings-select">
+                <label class="settings-label" for="set-ttsProviderSelect">Provider</label>
+                <select id="set-ttsProviderSelect" class="settings-select" aria-label="Text to speech provider">
                   <option value="disabled">Disabled</option>
                   <option value="browser">Browser (built-in)</option>
                   <option value="local">Local (Kokoro-82M)</option>
                 </select>
               </div>
               <div id="set-ttsModelRow" style="display:flex;align-items:center;gap:0.75rem;">
-                <label class="settings-label">Model</label>
-                <select id="set-ttsModelSelect" class="settings-select">
+                <label class="settings-label" for="set-ttsModelSelect">Model</label>
+                <select id="set-ttsModelSelect" class="settings-select" aria-label="Text to speech model">
                   <option value="tts-1">tts-1 (fast)</option>
                   <option value="tts-1-hd">tts-1-hd (quality)</option>
                   <option value="gpt-4o-mini-tts">gpt-4o-mini-tts (steerable)</option>
                 </select>
-                <input id="set-ttsModelInput" type="text" placeholder="model name" style="flex:1;padding:5px;display:none;">
+                <input id="set-ttsModelInput" type="text" placeholder="model name" style="flex:1;padding:5px;display:none;" aria-label="Custom text to speech model">
               </div>
               <div id="set-ttsVoiceRow" style="display:flex;align-items:center;gap:0.75rem;">
-                <label class="settings-label">Voice</label>
-                <select id="set-ttsVoiceSelect" class="settings-select">
+                <label class="settings-label" for="set-ttsVoiceSelect">Voice</label>
+                <select id="set-ttsVoiceSelect" class="settings-select" aria-label="Text to speech voice">
                   <option value="alloy">Alloy</option>
                   <option value="ash">Ash</option>
                   <option value="coral">Coral</option>
@@ -1665,11 +1665,11 @@
                   <option value="sage">Sage</option>
                   <option value="shimmer">Shimmer</option>
                 </select>
-                <input id="set-ttsVoiceInput" type="text" placeholder="af_heart" style="flex:1;padding:5px;display:none;">
+                <input id="set-ttsVoiceInput" type="text" placeholder="af_heart" style="flex:1;padding:5px;display:none;" aria-label="Custom text to speech voice">
               </div>
               <div id="set-ttsSpeedRow" style="display:flex;align-items:center;gap:0.75rem;">
-                <label class="settings-label">Speed</label>
-                <select id="set-ttsSpeedSelect" class="settings-select">
+                <label class="settings-label" for="set-ttsSpeedSelect">Speed</label>
+                <select id="set-ttsSpeedSelect" class="settings-select" aria-label="Text to speech speed">
                   <option value="0.5">0.5x</option>
                   <option value="0.75">0.75x</option>
                   <option value="1" selected>1x (normal)</option>
@@ -1692,7 +1692,7 @@
             <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;opacity:0.6"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Writing Style</h2>
             <div class="admin-toggle-sub" style="margin-bottom:8px">Used when AI drafts email replies. Keep this email-specific: greetings, sign-off, tone, and length.</div>
             <div class="settings-col">
-              <textarea id="set-email-style" rows="6" class="settings-select" style="font-family:inherit;resize:none" placeholder="e.g. I write emails in this style. I don't use exclamation marks. I sign emails with: ..."></textarea>
+              <textarea id="set-email-style" rows="6" class="settings-select" style="font-family:inherit;resize:none" placeholder="e.g. I write emails in this style. I don't use exclamation marks. I sign emails with: ..." aria-label="Email writing style"></textarea>
               <div class="settings-row" style="margin-top:4px">
                 <span id="set-email-style-msg" style="font-size:11px;"></span>
                 <button class="admin-btn-add" id="set-email-style-extract" style="margin-left:auto;display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0L14.59 8.41L23 12L14.59 15.59L12 24L9.41 15.59L1 12L9.41 8.41Z"/></svg>Extract from Sent (15 emails)</button>
@@ -1709,7 +1709,7 @@
             <div class="admin-toggle-sub" style="margin-bottom:8px">Search API used for web search and deep research.</div>
             <div class="settings-col">
               <div class="settings-row">
-                <label class="settings-label">Provider</label>
+                <label class="settings-label" for="set-searchProvider">Provider</label>
                 <!-- Custom picker (with logos). Hidden native <select> mirrors
                      its value so the existing JS that reads
                      set-searchProvider keeps working unchanged. -->
@@ -1720,7 +1720,7 @@
                   </button>
                   <div class="adm-provider-menu hidden" id="search-provider-menu"></div>
                 </div>
-                <select id="set-searchProvider" class="settings-select" style="display:none;">
+                <select id="set-searchProvider" class="settings-select" style="display:none;" aria-label="Search provider">
                   <option value="searxng" data-search-logo="searxng">SearXNG (self-hosted)</option>
                   <option value="duckduckgo" data-search-logo="duckduckgo">DuckDuckGo (free, no key)</option>
                   <option value="brave" data-search-logo="brave">Brave Search</option>
@@ -1734,35 +1734,35 @@
                 </button>
               </div>
               <div class="settings-row">
-                <label class="settings-label" title="How many web search results to fetch per query">Results per query</label>
+                <label class="settings-label" title="How many web search results to fetch per query" for="set-searchResultCount">Results per query</label>
                 <div style="display:flex;gap:8px;flex:1;">
-                  <select id="set-searchResultCount" class="settings-select" style="flex:1;">
+                  <select id="set-searchResultCount" class="settings-select" style="flex:1;" aria-label="Search result count">
                     <option value="3">3</option>
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="custom">Custom</option>
                   </select>
-                  <input id="set-searchResultCountCustom" type="number" class="settings-select" placeholder="Enter custom value" style="flex:1;display:none;min-width:120px;" min="1" max="100">
+                  <input id="set-searchResultCountCustom" type="number" class="settings-select" placeholder="Enter custom value" style="flex:1;display:none;min-width:120px;" min="1" max="100" aria-label="Custom search result count">
                 </div>
               </div>
               <div id="set-searchUrlRow" class="settings-row">
-                <label class="settings-label">URL</label>
-                <input id="set-searchUrl" type="text" placeholder="http://localhost:8080 (optional)" class="settings-select">
+                <label class="settings-label" for="set-searchUrl">URL</label>
+                <input id="set-searchUrl" type="text" placeholder="http://localhost:8080 (optional)" class="settings-select" aria-label="Search service URL">
               </div>
               <div id="set-searchKeyRow" class="settings-row" style="display:none;">
-                <label class="settings-label">API Key</label>
+                <label class="settings-label" for="set-searchApiKey">API Key</label>
                 <div style="position:relative;flex:1;display:flex;align-items:center;">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:0.55;pointer-events:none;"><path d="M21 2l-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/><path d="M15.5 7.5l3 3"/></svg>
-                  <input id="set-searchApiKey" type="password" placeholder="API key" class="settings-select" style="flex:1;padding-left:28px;">
+                  <input id="set-searchApiKey" type="text" placeholder="API key" autocomplete="off" spellcheck="false" autocapitalize="none" class="settings-select" style="flex:1;padding-left:28px;-webkit-text-security:disc;" aria-label="Search API key">
                 </div>
               </div>
               <div id="set-searchCxRow" class="settings-row" style="display:none;">
-                <label class="settings-label">CX ID</label>
-                <input id="set-searchCx" type="text" placeholder="Google PSE engine ID" class="settings-select">
+                <label class="settings-label" for="set-searchCx">CX ID</label>
+                <input id="set-searchCx" type="text" placeholder="Google PSE engine ID" class="settings-select" aria-label="Google programmable search engine ID">
               </div>
               <div class="settings-row" style="align-items:flex-start;">
-                <label class="settings-label" style="margin-top:6px;" title="Providers tried in order when the primary fails or hits a rate limit">Fallbacks</label>
+                <span class="settings-label" style="margin-top:6px;" title="Providers tried in order when the primary fails or hits a rate limit">Fallbacks</span>
                 <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
                   <div class="settings-fallbacks" id="set-searchFallbackChain"></div>
                   <button type="button" class="settings-fallback-add" id="set-searchAddFallback" title="Add a search provider to try if the primary fails">+ Add fallback</button>
@@ -1778,9 +1778,9 @@
             <div class="admin-toggle-sub" style="margin-bottom:8px">Deep Research runtime settings. Default Model is picked in <a href="#" data-go-settings-tab="ai" style="color:var(--accent, var(--red));text-decoration:underline;font-weight:600;">AI Defaults →</a></div>
             <div class="settings-col">
               <div class="settings-row">
-                <label class="settings-label">Search</label>
+                <label class="settings-label" for="set-researchSearch">Search</label>
                 <span style="margin-left:auto;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex-shrink:0;color:var(--fg);" id="set-researchSearch-logo"></span>
-                <select id="set-researchSearch" class="settings-select" style="width:358.5px;flex:0 0 auto;max-width:calc(100% - 24px);">
+                <select id="set-researchSearch" class="settings-select" style="width:358.5px;flex:0 0 auto;max-width:calc(100% - 24px);" aria-label="Research search provider">
                   <option value="" data-search-logo="">Same as web search</option>
                   <option value="searxng" data-search-logo="searxng">SearXNG</option>
                   <option value="duckduckgo" data-search-logo="duckduckgo">DuckDuckGo</option>
@@ -1791,26 +1791,26 @@
                 </select>
               </div>
               <div class="settings-row">
-                <label class="settings-label">Max Tokens</label>
-                <input id="set-researchMaxTokens" type="text" inputmode="numeric" placeholder="8192 (default)" class="settings-select" style="width:382.5px;flex:0 0 auto;margin-left:auto;">
+                <label class="settings-label" for="set-researchMaxTokens">Max Tokens</label>
+                <input id="set-researchMaxTokens" type="text" inputmode="numeric" placeholder="8192 (default)" class="settings-select" style="width:382.5px;flex:0 0 auto;margin-left:auto;" aria-label="Research maximum tokens">
               </div>
               <div class="settings-row">
-                <label class="settings-label">Extract Timeout</label>
+                <label class="settings-label" for="set-researchExtractTimeout">Extract Timeout</label>
                 <div style="position:relative;width:382.5px;flex:0 0 auto;margin-left:auto;">
-                  <input id="set-researchExtractTimeout" type="text" inputmode="numeric" placeholder="90 sec" class="settings-select" style="width:100%;padding-right:30px;">
+                  <input id="set-researchExtractTimeout" type="text" inputmode="numeric" placeholder="90 sec" class="settings-select" style="width:100%;padding-right:30px;" aria-label="Research extraction timeout">
                   <span title="How long the researcher waits for a single URL to fetch and extract before giving up on it. Slow sites get skipped. Default 90 seconds." style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:50%;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;opacity:0.55;cursor:help;user-select:none;">?</span>
                 </div>
               </div>
               <div class="settings-row">
-                <label class="settings-label">Extract Parallel</label>
+                <label class="settings-label" for="set-researchExtractConcurrency">Extract Parallel</label>
                 <div style="position:relative;width:382.5px;flex:0 0 auto;margin-left:auto;">
-                  <input id="set-researchExtractConcurrency" type="text" inputmode="numeric" placeholder="3" class="settings-select" style="width:100%;padding-right:30px;">
+                  <input id="set-researchExtractConcurrency" type="text" inputmode="numeric" placeholder="3" class="settings-select" style="width:100%;padding-right:30px;" aria-label="Research extraction concurrency">
                   <span title="How many URLs the researcher fetches and extracts in parallel. Higher is faster but uses more memory/CPU. Default 3." style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:50%;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;opacity:0.55;cursor:help;user-select:none;">?</span>
                 </div>
               </div>
               <div class="settings-row">
-                <label class="settings-label">Timeout</label>
-                <input id="set-researchRunTimeout" type="text" inputmode="numeric" placeholder="1800 sec (0 = no limit)" class="settings-select" style="width:382.5px;flex:0 0 auto;margin-left:auto;">
+                <label class="settings-label" for="set-researchRunTimeout">Timeout</label>
+                <input id="set-researchRunTimeout" type="text" inputmode="numeric" placeholder="1800 sec (0 = no limit)" class="settings-select" style="width:382.5px;flex:0 0 auto;margin-left:auto;" aria-label="Research run timeout">
               </div>
             </div>
           </div>
@@ -2036,15 +2036,16 @@
           </div>
           <div class="admin-card">
             <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;opacity:0.6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Change Password</h2>
-            <div class="settings-col">
-              <input id="settings-pw-current" type="password" placeholder="Current password" autocomplete="current-password" style="padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--fg);font-family:inherit;font-size:12px;">
-              <input id="settings-pw-new" type="password" placeholder="New password" autocomplete="new-password" style="padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--fg);font-family:inherit;font-size:12px;">
-              <input id="settings-pw-confirm" type="password" placeholder="Confirm new password" autocomplete="new-password" style="padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--fg);font-family:inherit;font-size:12px;">
+            <form class="settings-col" onsubmit="return false;">
+              <input type="text" name="username" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;opacity:0;" aria-label="Username">
+              <input id="settings-pw-current" type="password" placeholder="Current password" autocomplete="current-password" style="padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--fg);font-family:inherit;font-size:12px;" aria-label="Current password">
+              <input id="settings-pw-new" type="password" placeholder="New password" autocomplete="new-password" style="padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--fg);font-family:inherit;font-size:12px;" aria-label="New password">
+              <input id="settings-pw-confirm" type="password" placeholder="Confirm new password" autocomplete="new-password" style="padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--fg);font-family:inherit;font-size:12px;" aria-label="Confirm new password">
               <div class="settings-row" style="margin-top:2px;justify-content:flex-end;">
                 <span id="settings-pw-msg" style="font-size:11px;margin-right:auto;"></span>
                 <button class="admin-btn-add" id="settings-pw-save">Update Password</button>
               </div>
-            </div>
+            </form>
           </div>
           <div class="admin-card" id="settings-2fa-card">
             <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;opacity:0.6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>Two-Factor Authentication</h2>
@@ -2089,8 +2090,8 @@
             <div class="admin-toggle-sub" style="margin-bottom:8px">Controls how fired note reminders are delivered.</div>
             <div class="settings-col">
               <div class="settings-row">
-                <label class="settings-label">Channel</label>
-                <select id="set-reminder-channel" class="settings-select">
+                <label class="settings-label" for="set-reminder-channel">Channel</label>
+                <select id="set-reminder-channel" class="settings-select" aria-label="Reminder channel">
                   <option value="browser">Browser notification (default)</option>
                   <option value="email" id="set-reminder-channel-email-opt">Email</option>
                   <option value="ntfy" id="set-reminder-channel-ntfy-opt">ntfy</option>
@@ -2098,24 +2099,24 @@
                 </select>
               </div>
               <div id="set-reminder-email-from-row" class="settings-row" style="display:none">
-                <label class="settings-label">Send from</label>
-                <select id="set-reminder-email-account" class="settings-select"></select>
+                <label class="settings-label" for="set-reminder-email-account">Send from</label>
+                <select id="set-reminder-email-account" class="settings-select" aria-label="Reminder email account"></select>
               </div>
               <div id="set-reminder-email-to-row" class="settings-row" style="display:none">
-                <label class="settings-label">Send to</label>
-                <input id="set-reminder-email-to" class="settings-select" type="email" placeholder="you@example.com" />
+                <label class="settings-label" for="set-reminder-email-to">Send to</label>
+                <input id="set-reminder-email-to" class="settings-select" type="email" placeholder="you@example.com" / aria-label="Reminder recipient email">
               </div>
               <div id="set-reminder-ntfy-topic-row" class="settings-row" style="display:none">
-                <label class="settings-label">ntfy topic</label>
-                <input id="set-reminder-ntfy-topic" class="settings-select" type="text" placeholder="reminders" />
+                <label class="settings-label" for="set-reminder-ntfy-topic">ntfy topic</label>
+                <input id="set-reminder-ntfy-topic" class="settings-select" type="text" placeholder="reminders" / aria-label="Reminder ntfy topic">
               </div>
               <div id="set-reminder-webhook-intg-row" class="settings-row" style="display:none">
-                <label class="settings-label">Integration</label>
-                <select id="set-reminder-webhook-intg" class="settings-select"></select>
+                <label class="settings-label" for="set-reminder-webhook-intg">Integration</label>
+                <select id="set-reminder-webhook-intg" class="settings-select" aria-label="Reminder webhook integration"></select>
               </div>
               <div id="set-reminder-webhook-template-row" class="settings-row" style="display:none;align-items:flex-start">
-                <label class="settings-label" style="padding-top:6px">Payload</label>
-                <textarea id="set-reminder-webhook-template" class="settings-select" rows="3" style="font-family:inherit;resize:vertical;flex:1" placeholder='{"content": "{{title}}: {{message}}"}'></textarea>
+                <label class="settings-label" style="padding-top:6px" for="set-reminder-webhook-template">Payload</label>
+                <textarea id="set-reminder-webhook-template" class="settings-select" rows="3" style="font-family:inherit;resize:vertical;flex:1" placeholder='{"content": "{{title}}: {{message}}"}' aria-label="Reminder webhook template"></textarea>
               </div>
               <div id="set-reminder-channel-hint" style="font-size:11px;opacity:0.6;"></div>
               <div style="font-size:11px;opacity:0.6;margin-top:4px;">Configure email account, ntfy server, etc. in <a href="#" id="set-reminders-open-integrations" style="color:var(--accent, var(--red));text-decoration:none;font-weight:600;">Integrations</a>.</div>
@@ -2126,8 +2127,8 @@
             <div class="admin-toggle-sub" style="margin-bottom:8px">When on, the utility model writes a short, warm one-line reminder for browser, email, ntfy, and webhook reminders instead of just the raw note content.</div>
             <div class="settings-col">
               <div class="settings-row">
-                <label class="settings-label" title="Optional — write the reminder in the voice of a saved character">Persona</label>
-                <select id="set-reminder-llm-persona" class="settings-select" style="flex:1;">
+                <label class="settings-label" title="Optional — write the reminder in the voice of a saved character" for="set-reminder-llm-persona">Persona</label>
+                <select id="set-reminder-llm-persona" class="settings-select" style="flex:1;" aria-label="Reminder LLM persona">
                   <option value="">Default (warm, neutral)</option>
                 </select>
               </div>
@@ -2142,8 +2143,8 @@
             <div class="admin-toggle-sub" style="margin-bottom:8px">Used to build clickable links back to Odysseus inside outgoing reminder / urgent-email emails (e.g. <code>https://chat.yourdomain.com</code>). Leave blank to omit links.</div>
             <div class="settings-col">
               <div class="settings-row">
-                <label class="settings-label">URL</label>
-                <input id="set-app-public-url" class="settings-select" type="url" placeholder="https://chat.example.com" style="flex:1;" />
+                <label class="settings-label" for="set-app-public-url">URL</label>
+                <input id="set-app-public-url" class="settings-select" type="url" placeholder="https://chat.example.com" style="flex:1;" / aria-label="Public application URL">
               </div>
               <div id="set-app-public-url-msg" style="font-size:11px;color:color-mix(in srgb, var(--fg) 55%, transparent);"></div>
             </div>
@@ -2178,11 +2179,11 @@
           </div>
           <div class="admin-card">
             <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;opacity:0.6"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>Add User</h2>
-            <div class="admin-add-form">
-              <input id="adm-newUsername" type="text" placeholder="Username">
-              <input id="adm-newPassword" type="password" placeholder="Password">
+            <form class="admin-add-form" id="adm-addUserForm" onsubmit="return false;">
+              <input id="adm-newUsername" type="text" placeholder="Username" autocomplete="username" aria-label="New user username">
+              <input id="adm-newPassword" type="password" placeholder="Password" autocomplete="new-password" aria-label="New user password">
               <div class="admin-switch-inline" title="Grant full admin access"><label class="admin-switch"><input type="checkbox" id="adm-newIsAdmin"><span class="admin-slider"></span></label> Admin</div>
-            </div>
+            </form>
             <div class="settings-row" style="margin-top:6px;">
               <button class="admin-btn-add" id="adm-addBtn">Add User</button>
               <span id="adm-addMsg" style="font-size:11px"></span>
@@ -2220,18 +2221,18 @@
               <div class="admin-model-form">
                 <div class="admin-model-form-row">
                   <div class="adm-fused-group" style="display:flex;flex:1 1 180px;min-width:0;">
-                    <select id="adm-epLocalType" style="padding:5px;width:66px;flex-shrink:0;border-top-right-radius:0;border-bottom-right-radius:0;border-right:0;">
+                    <select id="adm-epLocalType" style="padding:5px;width:66px;flex-shrink:0;border-top-right-radius:0;border-bottom-right-radius:0;border-right:0;" aria-label="Local endpoint type">
                       <option value="llm" selected>LLM</option>
                       <option value="image">Image</option>
                     </select>
-                    <input id="adm-epLocalUrl" type="text" placeholder="Paste endpoint URL, e.g. http://localhost:11434/v1" style="flex:1;min-width:0;border-top-left-radius:0;border-bottom-left-radius:0;">
+                    <input id="adm-epLocalUrl" type="text" placeholder="Paste endpoint URL, e.g. http://localhost:11434/v1" style="flex:1;min-width:0;border-top-left-radius:0;border-bottom-left-radius:0;" aria-label="Local endpoint URL">
                   </div>
                   <button class="admin-btn-add" id="adm-epLocalAddBtn" style="min-width:55px;text-align:center;display:inline-flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Add
                   </button>
                 </div>
                 <div class="admin-model-form-row" id="adm-epLocalApiKey-row" style="display:none;">
-                  <input id="adm-epLocalApiKey" type="password" placeholder="API key (optional — for protected local endpoints)" autocomplete="off" style="flex:1">
+                  <input id="adm-epLocalApiKey" type="text" placeholder="API key (optional — for protected local endpoints)" autocomplete="off" spellcheck="false" autocapitalize="none" style="flex:1;-webkit-text-security:disc;" aria-label="Local endpoint API key">
                 </div>
                 <div id="adm-epLocalMsg" class="adm-ep-inline-msg"></div>
               </div>
@@ -2274,15 +2275,15 @@
                       <span class="adm-provider-current"><span class="adm-provider-logo"></span><span class="adm-provider-name">Provider</span></span>
                       <svg class="adm-provider-caret" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
-                    <input id="adm-epUrl" type="text" placeholder="Base URL or pick provider" autocomplete="off" style="border-left:0;border-top-left-radius:0;border-bottom-left-radius:0;border-top-right-radius:6px;border-bottom-right-radius:6px;">
+                    <input id="adm-epUrl" type="text" placeholder="Base URL or pick provider" autocomplete="off" style="border-left:0;border-top-left-radius:0;border-bottom-left-radius:0;border-top-right-radius:6px;border-bottom-right-radius:6px;" aria-label="Endpoint base URL">
                     <div class="adm-provider-menu hidden" id="adm-provider-menu"></div>
                   </div>
                 </div>
-                <select id="adm-epKind" style="display:none">
+                <select id="adm-epKind" style="display:none" aria-label="Endpoint kind">
                   <option value="proxy">proxy</option>
                   <option value="api" selected>api</option>
                 </select>
-                <select id="adm-epProvider" style="display:none">
+                <select id="adm-epProvider" style="display:none" aria-label="Endpoint provider">
                   <option value="">Custom URL</option>
                   <option value="https://api.anthropic.com" data-logo="anthropic">Anthropic</option>
                   <option value="https://api.deepseek.com/v1" data-logo="deepseek" selected>DeepSeek</option>
@@ -2306,7 +2307,7 @@
                 <div class="admin-model-form-row" id="adm-epApiKey-row">
                   <div style="position:relative;flex:1;display:flex;align-items:center;">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:0.55;pointer-events:none;"><path d="M21 2l-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/><path d="M15.5 7.5l3 3"/></svg>
-                    <input id="adm-epApiKey" type="password" placeholder="API key, e.g. sk-proj-AbCdEf…" autocomplete="off" style="flex:1;padding-left:28px;height:32px;box-sizing:border-box;">
+                    <input id="adm-epApiKey" type="text" placeholder="API key, e.g. sk-proj-AbCdEf…" autocomplete="off" spellcheck="false" autocapitalize="none" style="flex:1;padding-left:28px;height:32px;box-sizing:border-box;-webkit-text-security:disc;" aria-label="Endpoint API key">
                   </div>
                   <button class="admin-btn-add" id="adm-epAddBtn" style="height:32px;min-width:55px;text-align:center;display:inline-flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;box-sizing:border-box;">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Add
@@ -2369,12 +2370,12 @@
             <div class="admin-toggle-sub" style="margin-bottom:8px">Controls for the agent tool loop.</div>
             <div class="settings-col">
               <div class="settings-row">
-                <label class="settings-label">Tool call limit</label>
-                <input id="set-agentMaxTools" type="text" inputmode="numeric" placeholder="0 = unlimited" class="settings-select" style="width:120px;">
+                <label class="settings-label" for="set-agentMaxTools">Tool call limit</label>
+                <input id="set-agentMaxTools" type="text" inputmode="numeric" placeholder="0 = unlimited" class="settings-select" style="width:120px;" aria-label="Agent maximum tool calls">
               </div>
               <div class="settings-row">
-                <label class="settings-label">Max steps per message</label>
-                <input id="set-agentMaxRounds" type="text" inputmode="numeric" placeholder="20" class="settings-select" style="width:120px;">
+                <label class="settings-label" for="set-agentMaxRounds">Max steps per message</label>
+                <input id="set-agentMaxRounds" type="text" inputmode="numeric" placeholder="20" class="settings-select" style="width:120px;" aria-label="Agent maximum rounds">
               </div>
               <div id="set-agentMsg" style="font-size:11px;color:color-mix(in srgb, var(--fg) 45%, transparent);"></div>
             </div>
@@ -2403,10 +2404,10 @@
               <!-- Controls row -->
               <div class="settings-system-logs-controls">
                 <!-- Search input -->
-                <input type="text" id="log-search-input" placeholder="Search logs..." class="settings-system-logs-search">
+                <input type="text" id="log-search-input" placeholder="Search logs..." class="settings-system-logs-search" aria-label="Search logs">
 
                 <!-- Level select -->
-                <select id="log-level-select" class="settings-system-logs-select">
+                <select id="log-level-select" class="settings-system-logs-select" aria-label="Log level">
                   <option value="ALL">All Levels</option>
                   <option value="INFO">INFO</option>
                   <option value="WARNING">WARNING</option>
@@ -2415,7 +2416,7 @@
                 </select>
 
                 <!-- Limit select -->
-                <select id="log-limit-select" class="settings-system-logs-select">
+                <select id="log-limit-select" class="settings-system-logs-select" aria-label="Log entry limit">
                   <option value="100">100 lines</option>
                   <option value="200" selected>200 lines</option>
                   <option value="500">500 lines</option>
@@ -2450,7 +2451,7 @@
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
               <button class="admin-btn-add" id="adm-exportDataBtn">Export Data</button>
               <button class="admin-btn-add" id="adm-importDataBtn">Import Data</button>
-              <input type="file" id="adm-importFile" accept=".json" style="display:none;">
+              <input type="file" id="adm-importFile" accept=".json" style="display:none;" aria-label="Import configuration file">
             </div>
             <div id="adm-backupMsg" style="margin-top:6px;"></div>
           </div>
@@ -2542,7 +2543,7 @@
   <!-- Search overlay (Ctrl+K command palette) -->
   <div class="search-overlay hidden" id="search-overlay">
     <div class="search-popup">
-      <input type="text" id="search-input" placeholder="Search conversations..." autocomplete="off" />
+      <input type="text" id="search-input" placeholder="Search conversations..." autocomplete="off" / aria-label="Search conversations">
       <div class="search-results" id="search-results"></div>
     </div>
   </div>

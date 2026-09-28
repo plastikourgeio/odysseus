@@ -4425,7 +4425,7 @@ export function initRunning(shared) {
   // sessions, which is expensive when a saved remote host is unreachable.
   (async () => {
     try {
-      await _syncFromServer();
+      if (window._isAdmin) await _syncFromServer();
     } catch {}
     if (_hasLiveTasks()) _startBackgroundMonitor();
   })();

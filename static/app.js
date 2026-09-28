@@ -240,30 +240,59 @@ _refreshDefaultChat();
 async function _createDirectChatFromPreferredModel() {
   if (!sessionModule) return false;
 
+  // An explicit model selection for a pending New Chat always wins.
   const pending = sessionModule.getPendingChat && sessionModule.getPendingChat();
-  if (pending && pending.url && pending.modelId && pending.endpointId) {
-    sessionModule.createDirectChat(pending.url, pending.modelId, pending.endpointId, { source: pending.source || 'manual' });
+  if (
+    pending &&
+    pending.url &&
+    pending.modelId &&
+    pending.endpointId &&
+    (pending.source || 'manual') === 'manual'
+  ) {
+    sessionModule.createDirectChat(
+      pending.url,
+      pending.modelId,
+      pending.endpointId,
+      { source: 'manual' }
+    );
     return true;
   }
 
+  // New Chat should use the CURRENT configured default model.
+  // Fetch it live so Settings changes take effect immediately.
+  const dc = await _refreshDefaultChat();
+  if (dc) {
+    sessionModule.createDirectChat(
+      dc.endpoint_url,
+      dc.model,
+      dc.endpoint_id,
+      { source: 'default' }
+    );
+    return true;
+  }
+
+  // Only fall back to the current conversation model if no default exists.
   const sessions = sessionModule.getSessions();
   const currentId = sessionModule.getCurrentSessionId();
   const current = sessions.find(s => s.id === currentId);
   if (current && current.endpoint_url && current.model && current.endpoint_id) {
-    sessionModule.createDirectChat(current.endpoint_url, current.model, current.endpoint_id);
+    sessionModule.createDirectChat(
+      current.endpoint_url,
+      current.model,
+      current.endpoint_id
+    );
     return true;
   }
 
-  const dc = await _refreshDefaultChat();
-  if (dc) {
-    sessionModule.createDirectChat(dc.endpoint_url, dc.model, dc.endpoint_id, { source: 'default' });
-    return true;
-  }
-
+  // Last-resort fallback: most recently used model.
   const withModel = sessions.filter(s => s.endpoint_url && s.model);
   if (withModel.length > 0) {
     const last = withModel[0]; // sessions are sorted by recent
-    sessionModule.createDirectChat(last.endpoint_url, last.model, last.endpoint_id);
+    sessionModule.createDirectChat(
+      last.endpoint_url,
+      last.model,
+      last.endpoint_id
+    );
     return true;
   }
 
@@ -4012,7 +4041,7 @@ function startOdysseusApp() {
   }
 
   if (sendBtn) {
-    sendBtn.addEventListener('click', (e) => {
+    sendBtn.addEventListener('click', async (e) => {
       e.preventDefault();
 
       // If recording, stop recording
@@ -4030,20 +4059,10 @@ function startOdysseusApp() {
         return;
       }
 
-      // New chat mode — empty input, no attachments, no STT
+      // New chat mode — use exactly the same routing as every other
+      // desktop New Chat entry point.
       if (!hasText && !hasFiles && sendBtn.dataset.mode === 'newchat') {
-        if (sessionModule) {
-          const sessions = sessionModule.getSessions();
-          const currentId = sessionModule.getCurrentSessionId();
-          const current = sessions.find(s => s.id === currentId);
-          if (current && current.endpoint_url && current.model) {
-            sessionModule.createDirectChat(current.endpoint_url, current.model, current.endpoint_id);
-          } else {
-            // Fallback to rail button
-            const railNew = el('rail-new-session');
-            if (railNew) railNew.click();
-          }
-        }
+        await _handleNewChatAction();
         return;
       }
 
@@ -4569,7 +4588,6 @@ function startOdysseusApp() {
 
 
   if (window.hljs) {
-    console.log('Highlighting all code blocks on page load');
     document.querySelectorAll('pre code:not(.hljs)').forEach(block => {
       window.hljs.highlightElement(block);
     });

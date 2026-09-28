@@ -6028,7 +6028,10 @@ import { loadPanel } from './panels.js';
         return;
       }
 
-      if (data.status !== 'running') return;
+      if (data.status !== 'running') {
+        if (sessionModule && sessionModule.clearResearching) sessionModule.clearResearching(sessionId);
+        return;
+      }
 
       // Don't show reconnect UI if we've already switched away
       if (sessionModule.getCurrentSessionId() !== sessionId) return;
