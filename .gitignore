@@ -120,3 +120,12 @@ compound.config.json
 *.error.log
 _scratch/
 /odysseus/
+# Local development / migration backups
+debug-backups/
+.backup-*/
+*.bak-*
+*.backup-*
+*.before-*
+*.base-*
+Dockerfile.upstream-backup
+# Python runtime cache

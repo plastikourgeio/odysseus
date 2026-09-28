@@ -1,0 +1,5 @@
+services:
+  odysseus:
+    build:
+      context: .
+      dockerfile: Dockerfile.pi
