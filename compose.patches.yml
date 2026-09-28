@@ -1,0 +1,17 @@
+services:
+  odysseus:
+    volumes:
+      - "/srv/docker/stacks/odysseus/local-patches/src/tool_approvals.py:/app/src/tool_approvals.py:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/services/search/content.py:/app/services/search/content.py:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/src/llm_core.py:/app/src/llm_core.py:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/src/deep_research.py:/app/src/deep_research.py:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/src/research_handler.py:/app/src/research_handler.py:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/routes/chat_helpers.py:/app/routes/chat_helpers.py:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/core/database.py:/app/core/database.py:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/core/models.py:/app/core/models.py:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/core/session_manager.py:/app/core/session_manager.py:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/src/project_context.py:/app/src/project_context.py:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/routes/session_routes.py:/app/routes/session_routes.py:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/routes/project_routes.py:/app/routes/project_routes.py:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/static/js/sessions.js:/app/static/js/sessions.js:ro"
+      - "/srv/docker/stacks/odysseus/local-patches/static/js/projectContext.js:/app/static/js/projectContext.js:ro"

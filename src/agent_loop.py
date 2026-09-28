@@ -4356,6 +4356,288 @@ async def stream_agent_loop(
             "was_compacted": was_compacted,
         }
 
+    # ODYSSEUS MANDATORY RETRIEVAL PREFLIGHT v0.1
+    #
+    # Some fallback/local models can receive native tool schemas correctly
+    # but still answer from model memory instead of calling web_search.
+    # For requests that objectively require external evidence, retrieval is
+    # therefore a server-side routing decision rather than an LLM decision.
+    #
+    # This happens BEFORE _initial_route_source_messages is frozen so the
+    # primary model and every first-round fallback receive identical evidence.
+    _mr_query = str(_retrieval_query or _last_user or "").strip()
+    _mr_norm = re.sub(r"\s+", " ", _mr_query).casefold()
+
+    _mr_explicit_retrieval = bool(
+        re.search(
+            r"\b("
+            r"busca|buscar|investiga|investigar|investigaci[oó]n|"
+            r"verifica|verificar|comprueba|comprobar|"
+            r"confirma|confirmar|encuentra|encontrar|"
+            r"localiza|localizar|consulta|consultar|"
+            r"search|research|verify|check|find|look\s+up|lookup"
+            r")\b",
+            _mr_norm,
+            re.IGNORECASE,
+        )
+    )
+
+    _mr_evidence_target = bool(
+        re.search(
+            r"\b("
+            r"papers?|preprints?|arxiv|doi|journals?|"
+            r"revistas?|publicaciones?|bibliograf[ií]a|"
+            r"bibliogr[aá]fic[oa]s?|studies|study|estudios?|"
+            r"datasheets?|data\s+sheets?|manual(?:es)?|"
+            r"documentaci[oó]n|documentation|docs?|"
+            r"official|oficial|specifications?|"
+            r"especificaciones?|specs?|ficha\s+t[eé]cnica|"
+            r"pinout|firmware|releases?|"
+            r"compatibilidad|compatibility|"
+            r"stock|precio|price|availability|disponibilidad|"
+            r"internet|web|online"
+            r")\b",
+            _mr_norm,
+            re.IGNORECASE,
+        )
+    )
+
+    # Current/fresh information necessarily requires retrieval.
+    _mr_freshness_required = bool(
+        re.search(
+            r"\b("
+            r"latest|today|hoy|ahora\s+mismo|actualmente|"
+            r"precio\s+actual|stock\s+actual|"
+            r"current\s+(?:version|firmware|release|price|stock)"
+            r")\b",
+            _mr_norm,
+            re.IGNORECASE,
+        )
+    )
+
+    # Generic product/model heuristic for specification questions.
+    # Examples: GIGA R1, ESP32-S3, M10, Ender 3 V3, etc.
+    _mr_modelish = bool(
+        re.search(
+            r"\b(?=[A-Za-z0-9._-]*\d)"
+            r"[A-Za-z][A-Za-z0-9._-]*\b",
+            _mr_query,
+        )
+    )
+
+    _mr_spec_target = bool(
+        re.search(
+            r"\b("
+            r"voltaje|voltage|tensi[oó]n|corriente|amperaje|"
+            r"current|vin|vcc|logic|l[oó]gica|"
+            r"pin|pins|gpio|i2c|spi|uart|usb|"
+            r"power|alimentaci[oó]n|"
+            r"maximum|max|m[aá]xim[oa]|"
+            r"frequency|frecuencia|"
+            r"temperature|temperatura|"
+            r"firmware|compatible|compatibility|compatibilidad"
+            r")\b",
+            _mr_norm,
+            re.IGNORECASE,
+        )
+    )
+
+    # If the UI Search option explicitly requested web_search, that is also
+    # mandatory retrieval rather than merely making the schema visible.
+    _mr_search_forced = bool(
+        forced_tools
+        and "web_search" in set(forced_tools)
+    )
+
+    _mr_required = bool(
+        _mr_freshness_required
+        or (
+            _mr_explicit_retrieval
+            and _mr_evidence_target
+        )
+        or (
+            _mr_modelish
+            and _mr_spec_target
+        )
+    )
+
+    logger.info(
+        "[mandatory-retrieval] required=%s "
+        "forced=%s explicit=%s evidence=%s "
+        "fresh=%s modelish=%s spec=%s query=%r",
+        _mr_required,
+        _mr_search_forced,
+        _mr_explicit_retrieval,
+        _mr_evidence_target,
+        _mr_freshness_required,
+        _mr_modelish,
+        _mr_spec_target,
+        _mr_query[:240],
+    )
+
+    _mr_can_run = (
+        _mr_required
+        and bool(_mr_query)
+        and not guide_only
+        and exact_approval is None
+        and "web_search" not in disabled_tools
+    )
+
+    if _mr_can_run:
+        _mr_result = None
+        _mr_clean = ""
+        _mr_sources = []
+
+        try:
+            from src.agent_tools import TOOL_HANDLERS
+
+            logger.info(
+                "[mandatory-retrieval] executing web_search query=%r",
+                _mr_query[:240],
+            )
+
+            _mr_result = await TOOL_HANDLERS["web_search"](
+                _mr_query,
+                {
+                    "session_id": session_id,
+                    "owner": owner,
+                },
+            )
+
+            if not isinstance(_mr_result, dict):
+                _mr_result = {
+                    "output": str(_mr_result or ""),
+                    "exit_code": 0,
+                }
+
+            _mr_raw = str(
+                _mr_result.get("output")
+                or _mr_result.get("results")
+                or _mr_result.get("stdout")
+                or _mr_result.get("content")
+                or ""
+            )
+
+            # Preserve the normal source UI emitted by web_search while
+            # removing the private marker before evidence reaches the model.
+            _mr_marker = "<!-- SOURCES:"
+            _mr_idx = _mr_raw.find(_mr_marker)
+
+            if _mr_idx >= 0:
+                _mr_end = _mr_raw.find(" -->", _mr_idx)
+
+                if _mr_end >= 0:
+                    try:
+                        _mr_sources = json.loads(
+                            _mr_raw[
+                                _mr_idx + len(_mr_marker):
+                                _mr_end
+                            ]
+                        )
+                    except Exception:
+                        _mr_sources = []
+
+                    _mr_clean = (
+                        _mr_raw[:_mr_idx]
+                        + _mr_raw[_mr_end + 4:]
+                    ).strip()
+                else:
+                    _mr_clean = _mr_raw.strip()
+            else:
+                _mr_clean = _mr_raw.strip()
+
+            if _mr_sources:
+                yield (
+                    "data: "
+                    + json.dumps(
+                        {
+                            "type": "web_sources",
+                            "data": _mr_sources,
+                        }
+                    )
+                    + "\n\n"
+                )
+
+            if _mr_clean:
+                _mr_context_message = untrusted_context_message(
+                    "mandatory retrieval evidence",
+                    _mr_clean,
+                )
+            else:
+                _mr_context_message = {
+                    "role": "user",
+                    "content": (
+                        "[SERVER RETRIEVAL STATUS]\n"
+                        "External evidence was required for this request, "
+                        "but retrieval returned no usable evidence. "
+                        "Do not invent sources, citations, specifications, "
+                        "prices, availability, or verification claims. "
+                        "State clearly what could not be verified."
+                    ),
+                }
+
+            # Keep the actual user request as the final user turn.
+            messages = list(messages)
+            _mr_insert_at = len(messages)
+
+            for _mr_pos in range(
+                len(messages) - 1,
+                -1,
+                -1,
+            ):
+                if messages[_mr_pos].get("role") == "user":
+                    _mr_insert_at = _mr_pos
+                    break
+
+            messages.insert(
+                _mr_insert_at,
+                _mr_context_message,
+            )
+
+            logger.info(
+                "[mandatory-retrieval] injected chars=%d sources=%d exit_code=%r",
+                len(_mr_clean),
+                len(_mr_sources),
+                _mr_result.get("exit_code"),
+            )
+
+        except Exception as _mr_error:
+            logger.warning(
+                "[mandatory-retrieval] failed: %s",
+                _mr_error,
+                exc_info=True,
+            )
+
+            messages = list(messages)
+
+            _mr_failure_context = {
+                "role": "user",
+                "content": (
+                    "[SERVER RETRIEVAL STATUS]\n"
+                    "External evidence was required for this request, "
+                    "but the retrieval operation failed. "
+                    "Do not fabricate sources or claim that external "
+                    "verification succeeded."
+                ),
+            }
+
+            _mr_insert_at = len(messages)
+
+            for _mr_pos in range(
+                len(messages) - 1,
+                -1,
+                -1,
+            ):
+                if messages[_mr_pos].get("role") == "user":
+                    _mr_insert_at = _mr_pos
+                    break
+
+            messages.insert(
+                _mr_insert_at,
+                _mr_failure_context,
+            )
+
+
     _initial_route_source_messages = messages
     _route_state = await _build_route_request_state(
         endpoint_url,
@@ -4749,13 +5031,19 @@ async def stream_agent_loop(
         if approved.tool_name in _VERIFIER_EFFECTFUL_TOOLS:
             _effectful_used = True
         formatted_approved_result = format_tool_result(desc, approved_result)
+
+        # Preserve provider-native tool-call continuity across the approval
+        # boundary.  Gemini in particular requires the original call id and
+        # extra_content/thought_signature on the follow-up request.
+        approved_native_call = getattr(approved, "native_call", None)
+
         _append_tool_results(
             messages,
             "",
-            [],
+            [approved_native_call] if approved_native_call else [],
             [formatted_approved_result],
             [formatted_approved_result],
-            False,
+            bool(approved_native_call),
             0,
             tool_result_records=[
                 {
@@ -5754,6 +6042,11 @@ async def stream_agent_loop(
                         ),
                         selected_tools=approval_selected_tools,
                         continuation_query=_retrieval_query or _last_user,
+                        native_call=(
+                            converted_calls[i]
+                            if used_native and i < len(converted_calls)
+                            else None
+                        ),
                         capabilities=capabilities_for_action(
                             block.tool_type,
                             block.content,

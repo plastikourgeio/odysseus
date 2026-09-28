@@ -1,0 +1,1252 @@
+{
+  "terms": [
+    {
+      "canonical": "3D printing",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "impresion 3d",
+        "impresión 3d"
+      ],
+      "en": [
+        "3d printing"
+      ]
+    },
+    {
+      "canonical": "warping",
+      "domains": [
+        "fabrication",
+        "chemistry_materials"
+      ],
+      "es": [
+        "alabeo",
+        "deformacion por contraccion",
+        "deformación por contracción",
+        "se levanta de las esquinas",
+        "se despega de las esquinas"
+      ],
+      "en": [
+        "warping"
+      ]
+    },
+    {
+      "canonical": "stringing",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "hilos",
+        "hilillos",
+        "encordado"
+      ],
+      "en": [
+        "stringing"
+      ]
+    },
+    {
+      "canonical": "nozzle",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "boquilla"
+      ],
+      "en": [
+        "nozzle"
+      ]
+    },
+    {
+      "canonical": "print bed",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "cama de impresion",
+        "cama de impresión",
+        "cama"
+      ],
+      "en": [
+        "print bed",
+        "bed"
+      ]
+    },
+    {
+      "canonical": "bed adhesion",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "adhesion a la cama",
+        "adhesión a la cama",
+        "adherencia a la cama"
+      ],
+      "en": [
+        "bed adhesion"
+      ]
+    },
+    {
+      "canonical": "first layer",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "primera capa"
+      ],
+      "en": [
+        "first layer"
+      ]
+    },
+    {
+      "canonical": "retraction",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "retraccion",
+        "retracción"
+      ],
+      "en": [
+        "retraction"
+      ]
+    },
+    {
+      "canonical": "infill",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "relleno"
+      ],
+      "en": [
+        "infill"
+      ]
+    },
+    {
+      "canonical": "supports",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "soportes"
+      ],
+      "en": [
+        "supports",
+        "support"
+      ]
+    },
+    {
+      "canonical": "filament",
+      "domains": [
+        "fabrication",
+        "chemistry_materials"
+      ],
+      "es": [
+        "filamento"
+      ],
+      "en": [
+        "filament"
+      ]
+    },
+    {
+      "canonical": "clog",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "atasco",
+        "boquilla atascada"
+      ],
+      "en": [
+        "clog",
+        "clogged nozzle"
+      ]
+    },
+    {
+      "canonical": "under-extrusion",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "subextrusion",
+        "subextrusión",
+        "falta de extrusion",
+        "falta de extrusión"
+      ],
+      "en": [
+        "under extrusion",
+        "under-extrusion"
+      ]
+    },
+    {
+      "canonical": "over-extrusion",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "sobreextrusion",
+        "sobreextrusión",
+        "exceso de extrusion",
+        "exceso de extrusión"
+      ],
+      "en": [
+        "over extrusion",
+        "over-extrusion"
+      ]
+    },
+    {
+      "canonical": "layer height",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "altura de capa"
+      ],
+      "en": [
+        "layer height"
+      ]
+    },
+    {
+      "canonical": "flow rate",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "flujo",
+        "caudal de extrusion",
+        "caudal de extrusión"
+      ],
+      "en": [
+        "flow rate"
+      ]
+    },
+    {
+      "canonical": "print speed",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "velocidad de impresion",
+        "velocidad de impresión"
+      ],
+      "en": [
+        "print speed"
+      ]
+    },
+    {
+      "canonical": "bridge",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "puente",
+        "puentes"
+      ],
+      "en": [
+        "bridge",
+        "bridging"
+      ]
+    },
+    {
+      "canonical": "Z offset",
+      "domains": [
+        "fabrication"
+      ],
+      "es": [
+        "offset z",
+        "desfase z"
+      ],
+      "en": [
+        "z offset",
+        "z-offset"
+      ]
+    },
+    {
+      "canonical": "board",
+      "domains": [
+        "electronics",
+        "embedded"
+      ],
+      "es": [
+        "placa"
+      ],
+      "en": [
+        "board"
+      ]
+    },
+    {
+      "canonical": "pinout",
+      "domains": [
+        "electronics",
+        "embedded"
+      ],
+      "es": [
+        "patillaje",
+        "distribucion de pines",
+        "distribución de pines"
+      ],
+      "en": [
+        "pinout"
+      ]
+    },
+    {
+      "canonical": "power supply",
+      "domains": [
+        "electronics"
+      ],
+      "es": [
+        "alimentacion",
+        "alimentación",
+        "fuente de alimentacion",
+        "fuente de alimentación"
+      ],
+      "en": [
+        "power supply",
+        "power"
+      ]
+    },
+    {
+      "canonical": "voltage",
+      "domains": [
+        "electronics"
+      ],
+      "es": [
+        "tension",
+        "tensión",
+        "voltaje"
+      ],
+      "en": [
+        "voltage"
+      ]
+    },
+    {
+      "canonical": "current",
+      "domains": [
+        "electronics"
+      ],
+      "es": [
+        "corriente"
+      ],
+      "en": [
+        "current"
+      ]
+    },
+    {
+      "canonical": "ground",
+      "domains": [
+        "electronics"
+      ],
+      "es": [
+        "masa",
+        "tierra"
+      ],
+      "en": [
+        "ground",
+        "gnd"
+      ]
+    },
+    {
+      "canonical": "resistor",
+      "domains": [
+        "electronics"
+      ],
+      "es": [
+        "resistencia"
+      ],
+      "en": [
+        "resistor"
+      ]
+    },
+    {
+      "canonical": "capacitor",
+      "domains": [
+        "electronics"
+      ],
+      "es": [
+        "condensador",
+        "capacitor"
+      ],
+      "en": [
+        "capacitor"
+      ]
+    },
+    {
+      "canonical": "pull-up resistor",
+      "domains": [
+        "electronics",
+        "embedded"
+      ],
+      "es": [
+        "resistencia pull-up",
+        "resistencia de pull-up"
+      ],
+      "en": [
+        "pull-up resistor",
+        "pullup resistor"
+      ]
+    },
+    {
+      "canonical": "sensor",
+      "domains": [
+        "electronics",
+        "embedded",
+        "measurement"
+      ],
+      "es": [
+        "sensor"
+      ],
+      "en": [
+        "sensor"
+      ]
+    },
+    {
+      "canonical": "actuator",
+      "domains": [
+        "electronics",
+        "robotics"
+      ],
+      "es": [
+        "actuador"
+      ],
+      "en": [
+        "actuator"
+      ]
+    },
+    {
+      "canonical": "microcontroller",
+      "domains": [
+        "embedded"
+      ],
+      "es": [
+        "microcontrolador"
+      ],
+      "en": [
+        "microcontroller"
+      ]
+    },
+    {
+      "canonical": "firmware",
+      "domains": [
+        "embedded",
+        "computing"
+      ],
+      "es": [
+        "firmware"
+      ],
+      "en": [
+        "firmware"
+      ]
+    },
+    {
+      "canonical": "GPIO",
+      "domains": [
+        "electronics",
+        "embedded"
+      ],
+      "es": [
+        "gpio"
+      ],
+      "en": [
+        "gpio"
+      ]
+    },
+    {
+      "canonical": "PWM",
+      "domains": [
+        "electronics",
+        "embedded"
+      ],
+      "es": [
+        "pwm"
+      ],
+      "en": [
+        "pwm"
+      ]
+    },
+    {
+      "canonical": "ADC",
+      "domains": [
+        "electronics",
+        "embedded"
+      ],
+      "es": [
+        "adc",
+        "convertidor analogico digital",
+        "convertidor analógico digital"
+      ],
+      "en": [
+        "adc",
+        "analog to digital converter"
+      ]
+    },
+    {
+      "canonical": "DAC",
+      "domains": [
+        "electronics",
+        "embedded"
+      ],
+      "es": [
+        "dac",
+        "convertidor digital analogico",
+        "convertidor digital analógico"
+      ],
+      "en": [
+        "dac",
+        "digital to analog converter"
+      ]
+    },
+    {
+      "canonical": "I2C",
+      "domains": [
+        "electronics",
+        "embedded"
+      ],
+      "es": [
+        "i2c",
+        "bus i2c"
+      ],
+      "en": [
+        "i2c"
+      ]
+    },
+    {
+      "canonical": "SPI",
+      "domains": [
+        "electronics",
+        "embedded"
+      ],
+      "es": [
+        "spi",
+        "bus spi"
+      ],
+      "en": [
+        "spi"
+      ]
+    },
+    {
+      "canonical": "UART",
+      "domains": [
+        "electronics",
+        "embedded"
+      ],
+      "es": [
+        "uart",
+        "serie",
+        "puerto serie"
+      ],
+      "en": [
+        "uart",
+        "serial"
+      ]
+    },
+    {
+      "canonical": "library",
+      "domains": [
+        "computing",
+        "embedded"
+      ],
+      "es": [
+        "libreria",
+        "librería"
+      ],
+      "en": [
+        "library"
+      ]
+    },
+    {
+      "canonical": "compile",
+      "domains": [
+        "computing",
+        "embedded"
+      ],
+      "es": [
+        "compilar",
+        "compilacion",
+        "compilación"
+      ],
+      "en": [
+        "compile",
+        "compilation"
+      ]
+    },
+    {
+      "canonical": "debugging",
+      "domains": [
+        "computing",
+        "engineering_design"
+      ],
+      "es": [
+        "depuracion",
+        "depuración",
+        "diagnostico",
+        "diagnóstico"
+      ],
+      "en": [
+        "debug",
+        "debugging",
+        "troubleshooting"
+      ]
+    },
+    {
+      "canonical": "function",
+      "domains": [
+        "computing"
+      ],
+      "es": [
+        "funcion",
+        "función"
+      ],
+      "en": [
+        "function"
+      ]
+    },
+    {
+      "canonical": "variable",
+      "domains": [
+        "computing",
+        "mathematics_statistics"
+      ],
+      "es": [
+        "variable"
+      ],
+      "en": [
+        "variable"
+      ]
+    },
+    {
+      "canonical": "loop",
+      "domains": [
+        "computing"
+      ],
+      "es": [
+        "bucle"
+      ],
+      "en": [
+        "loop"
+      ]
+    },
+    {
+      "canonical": "condition",
+      "domains": [
+        "computing"
+      ],
+      "es": [
+        "condicion",
+        "condición"
+      ],
+      "en": [
+        "condition"
+      ]
+    },
+    {
+      "canonical": "dependency",
+      "domains": [
+        "computing"
+      ],
+      "es": [
+        "dependencia"
+      ],
+      "en": [
+        "dependency"
+      ]
+    },
+    {
+      "canonical": "network",
+      "domains": [
+        "networking_security",
+        "computing"
+      ],
+      "es": [
+        "red"
+      ],
+      "en": [
+        "network"
+      ]
+    },
+    {
+      "canonical": "encryption",
+      "domains": [
+        "networking_security"
+      ],
+      "es": [
+        "cifrado",
+        "encriptacion",
+        "encriptación"
+      ],
+      "en": [
+        "encryption"
+      ]
+    },
+    {
+      "canonical": "backlash",
+      "domains": [
+        "mechanical_engineering"
+      ],
+      "es": [
+        "holgura mecanica",
+        "holgura mecánica",
+        "juego mecanico",
+        "juego mecánico"
+      ],
+      "en": [
+        "backlash"
+      ]
+    },
+    {
+      "canonical": "clearance",
+      "domains": [
+        "mechanical_engineering",
+        "fabrication"
+      ],
+      "es": [
+        "holgura",
+        "separacion",
+        "separación"
+      ],
+      "en": [
+        "clearance"
+      ]
+    },
+    {
+      "canonical": "tolerance",
+      "domains": [
+        "mechanical_engineering",
+        "fabrication"
+      ],
+      "es": [
+        "tolerancia"
+      ],
+      "en": [
+        "tolerance"
+      ]
+    },
+    {
+      "canonical": "bearing",
+      "domains": [
+        "mechanical_engineering"
+      ],
+      "es": [
+        "rodamiento"
+      ],
+      "en": [
+        "bearing"
+      ]
+    },
+    {
+      "canonical": "gear",
+      "domains": [
+        "mechanical_engineering"
+      ],
+      "es": [
+        "engranaje"
+      ],
+      "en": [
+        "gear"
+      ]
+    },
+    {
+      "canonical": "torque",
+      "domains": [
+        "mechanical_engineering",
+        "robotics"
+      ],
+      "es": [
+        "par motor",
+        "par"
+      ],
+      "en": [
+        "torque"
+      ]
+    },
+    {
+      "canonical": "load",
+      "domains": [
+        "mechanical_engineering"
+      ],
+      "es": [
+        "carga mecanica",
+        "carga mecánica"
+      ],
+      "en": [
+        "load"
+      ]
+    },
+    {
+      "canonical": "measurement",
+      "domains": [
+        "measurement"
+      ],
+      "es": [
+        "medicion",
+        "medición",
+        "medida"
+      ],
+      "en": [
+        "measurement"
+      ]
+    },
+    {
+      "canonical": "uncertainty",
+      "domains": [
+        "measurement",
+        "mathematics_statistics"
+      ],
+      "es": [
+        "incertidumbre"
+      ],
+      "en": [
+        "uncertainty"
+      ]
+    },
+    {
+      "canonical": "accuracy",
+      "domains": [
+        "measurement"
+      ],
+      "es": [
+        "exactitud"
+      ],
+      "en": [
+        "accuracy"
+      ]
+    },
+    {
+      "canonical": "precision",
+      "domains": [
+        "measurement"
+      ],
+      "es": [
+        "precision",
+        "precisión"
+      ],
+      "en": [
+        "precision"
+      ]
+    },
+    {
+      "canonical": "calibration",
+      "domains": [
+        "measurement",
+        "engineering_design"
+      ],
+      "es": [
+        "calibracion",
+        "calibración"
+      ],
+      "en": [
+        "calibration"
+      ]
+    },
+    {
+      "canonical": "hypothesis",
+      "domains": [
+        "engineering_design"
+      ],
+      "es": [
+        "hipotesis",
+        "hipótesis"
+      ],
+      "en": [
+        "hypothesis"
+      ]
+    },
+    {
+      "canonical": "control variable",
+      "domains": [
+        "engineering_design",
+        "mathematics_statistics"
+      ],
+      "es": [
+        "variable de control"
+      ],
+      "en": [
+        "control variable"
+      ]
+    },
+    {
+      "canonical": "sample",
+      "domains": [
+        "mathematics_statistics"
+      ],
+      "es": [
+        "muestra"
+      ],
+      "en": [
+        "sample"
+      ]
+    },
+    {
+      "canonical": "standard deviation",
+      "domains": [
+        "mathematics_statistics"
+      ],
+      "es": [
+        "desviacion estandar",
+        "desviación estándar"
+      ],
+      "en": [
+        "standard deviation"
+      ]
+    },
+    {
+      "canonical": "pressure",
+      "domains": [
+        "physics",
+        "earth_science",
+        "measurement"
+      ],
+      "es": [
+        "presion",
+        "presión"
+      ],
+      "en": [
+        "pressure"
+      ]
+    },
+    {
+      "canonical": "temperature",
+      "domains": [
+        "physics",
+        "measurement",
+        "earth_science"
+      ],
+      "es": [
+        "temperatura"
+      ],
+      "en": [
+        "temperature"
+      ]
+    },
+    {
+      "canonical": "humidity",
+      "domains": [
+        "earth_science",
+        "measurement"
+      ],
+      "es": [
+        "humedad"
+      ],
+      "en": [
+        "humidity"
+      ]
+    },
+    {
+      "canonical": "acceleration",
+      "domains": [
+        "physics",
+        "robotics",
+        "measurement"
+      ],
+      "es": [
+        "aceleracion",
+        "aceleración"
+      ],
+      "en": [
+        "acceleration"
+      ]
+    },
+    {
+      "canonical": "force",
+      "domains": [
+        "physics",
+        "mechanical_engineering"
+      ],
+      "es": [
+        "fuerza"
+      ],
+      "en": [
+        "force"
+      ]
+    },
+    {
+      "canonical": "training data",
+      "domains": [
+        "ai_data"
+      ],
+      "es": [
+        "datos de entrenamiento"
+      ],
+      "en": [
+        "training data"
+      ]
+    },
+    {
+      "canonical": "test data",
+      "domains": [
+        "ai_data"
+      ],
+      "es": [
+        "datos de prueba",
+        "datos de test"
+      ],
+      "en": [
+        "test data"
+      ]
+    },
+    {
+      "canonical": "bias",
+      "domains": [
+        "ai_data"
+      ],
+      "es": [
+        "sesgo"
+      ],
+      "en": [
+        "bias"
+      ]
+    },
+    {
+      "canonical": "machine learning model",
+      "domains": [
+        "ai_data"
+      ],
+      "es": [
+        "modelo de aprendizaje automatico",
+        "modelo de aprendizaje automático",
+        "modelo de machine learning"
+      ],
+      "en": [
+        "machine learning model",
+        "ml model"
+      ]
+    },
+    {
+      "canonical": "inference",
+      "domains": [
+        "ai_data"
+      ],
+      "es": [
+        "inferencia"
+      ],
+      "en": [
+        "inference"
+      ]
+    },
+    {
+      "canonical": "classification",
+      "domains": [
+        "ai_data"
+      ],
+      "es": [
+        "clasificacion",
+        "clasificación"
+      ],
+      "en": [
+        "classification"
+      ]
+    },
+    {
+      "canonical": "computer vision",
+      "domains": [
+        "ai_data",
+        "computing"
+      ],
+      "es": [
+        "vision por computador",
+        "visión por computador",
+        "vision artificial",
+        "visión artificial"
+      ],
+      "en": [
+        "computer vision"
+      ]
+    },
+    {
+      "canonical": "telescope",
+      "domains": [
+        "astronomy_space"
+      ],
+      "es": [
+        "telescopio"
+      ],
+      "en": [
+        "telescope"
+      ]
+    },
+    {
+      "canonical": "orbit",
+      "domains": [
+        "astronomy_space",
+        "aerospace"
+      ],
+      "es": [
+        "orbita",
+        "órbita"
+      ],
+      "en": [
+        "orbit"
+      ]
+    },
+    {
+      "canonical": "satellite",
+      "domains": [
+        "astronomy_space",
+        "aerospace"
+      ],
+      "es": [
+        "satelite",
+        "satélite"
+      ],
+      "en": [
+        "satellite"
+      ]
+    },
+    {
+      "canonical": "rocket",
+      "domains": [
+        "aerospace"
+      ],
+      "es": [
+        "cohete"
+      ],
+      "en": [
+        "rocket"
+      ]
+    },
+    {
+      "canonical": "aerodynamics",
+      "domains": [
+        "aerospace",
+        "physics"
+      ],
+      "es": [
+        "aerodinamica",
+        "aerodinámica"
+      ],
+      "en": [
+        "aerodynamics"
+      ]
+    },
+    {
+      "canonical": "polymer",
+      "domains": [
+        "chemistry_materials"
+      ],
+      "es": [
+        "polimero",
+        "polímero"
+      ],
+      "en": [
+        "polymer"
+      ]
+    },
+    {
+      "canonical": "corrosion",
+      "domains": [
+        "chemistry_materials"
+      ],
+      "es": [
+        "corrosion",
+        "corrosión"
+      ],
+      "en": [
+        "corrosion"
+      ]
+    },
+    {
+      "canonical": "weather",
+      "domains": [
+        "earth_science"
+      ],
+      "es": [
+        "tiempo meteorologico",
+        "tiempo meteorológico",
+        "meteorologia",
+        "meteorología"
+      ],
+      "en": [
+        "weather",
+        "meteorology"
+      ]
+    },
+    {
+      "canonical": "obstacle avoidance",
+      "domains": [
+        "robotics"
+      ],
+      "es": [
+        "evitacion de obstaculos",
+        "evitación de obstáculos",
+        "control de obstaculos",
+        "control de obstáculos",
+        "evitar obstaculos",
+        "evitar obstáculos"
+      ],
+      "en": [
+        "obstacle avoidance"
+      ]
+    },
+    {
+      "canonical": "educational robot",
+      "domains": [
+        "robotics"
+      ],
+      "es": [
+        "robot educativo",
+        "robots educativos",
+        "robotica educativa",
+        "robótica educativa"
+      ],
+      "en": [
+        "educational robot",
+        "educational robotics"
+      ]
+    },
+    {
+      "canonical": "low-cost",
+      "domains": [
+        "engineering_design"
+      ],
+      "es": [
+        "bajo coste",
+        "bajo costo"
+      ],
+      "en": [
+        "low cost",
+        "low-cost"
+      ]
+    },
+    {
+      "canonical": "recent research",
+      "domains": [
+        "engineering_design"
+      ],
+      "es": [
+        "investigacion reciente",
+        "investigación reciente",
+        "estudios recientes"
+      ],
+      "en": [
+        "recent research",
+        "recent studies"
+      ]
+    },
+    {
+      "canonical": "education",
+      "domains": [
+        "multidisciplinary"
+      ],
+      "es": [
+        "educacion",
+        "educación",
+        "educativo",
+        "educativa",
+        "ensenanza",
+        "enseñanza",
+        "aprendizaje",
+        "alumno",
+        "alumnos",
+        "estudiante",
+        "estudiantes"
+      ],
+      "en": [
+        "education",
+        "educational",
+        "teaching",
+        "learning",
+        "student",
+        "students"
+      ]
+    }
+  ]
+}

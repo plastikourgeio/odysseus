@@ -158,3 +158,19 @@ from src.tool_implementations import (  # noqa: E402, F401
     do_manage_tasks,
     do_api_call,
 )
+
+# STEM_SOURCE_AGENT_BRIDGE_V0_8_4
+try:
+    from services.stem_sources import (
+        wrap_web_search_handler as _stem_wrap_web_search_handler,
+    )
+
+    TOOL_HANDLERS["web_search"] = _stem_wrap_web_search_handler(
+        TOOL_HANDLERS["web_search"]
+    )
+    logger.info("STEM Source Registry v0.8.4 web_search bridge enabled")
+except Exception as _stem_bridge_exc:
+    logger.warning(
+        "STEM Source Registry web_search bridge unavailable: %s",
+        _stem_bridge_exc,
+    )

@@ -1,0 +1,565 @@
+{
+  "version": 4,
+  "sources": [
+    {
+      "id": "manufacturer_docs",
+      "name": "Official manufacturer/project documentation",
+      "kind": "official_dynamic",
+      "domains": [
+        "*"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "compare",
+        "verify",
+        "code",
+        "design"
+      ],
+      "authority": "primary",
+      "cost": "free",
+      "notes": "First choice for electrical limits, compatibility, firmware, APIs, settings and product specifications. Resolve dynamically to the relevant manufacturer or official project."
+    },
+    {
+      "id": "official_repo",
+      "name": "Official software or hardware repository",
+      "kind": "official_dynamic",
+      "domains": [
+        "computing",
+        "electronics",
+        "embedded",
+        "robotics",
+        "fabrication",
+        "ai_data",
+        "networking_security"
+      ],
+      "intents": [
+        "troubleshoot",
+        "code",
+        "verify",
+        "configure",
+        "compare"
+      ],
+      "authority": "primary",
+      "cost": "free",
+      "notes": "Use releases, source and maintainer-confirmed issues before community posts."
+    },
+    {
+      "id": "arduino_docs",
+      "name": "Arduino Documentation",
+      "kind": "official",
+      "domains": [
+        "electronics",
+        "embedded",
+        "computing",
+        "robotics",
+        "engineering_design"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "verify",
+        "code",
+        "design",
+        "compare"
+      ],
+      "authority": "primary",
+      "cost": "free"
+    },
+    {
+      "id": "raspberry_pi_docs",
+      "name": "Raspberry Pi Documentation",
+      "kind": "official",
+      "domains": [
+        "computing",
+        "electronics",
+        "embedded",
+        "networking_security",
+        "robotics"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "verify",
+        "code",
+        "design"
+      ],
+      "authority": "primary",
+      "cost": "free"
+    },
+    {
+      "id": "espressif_docs",
+      "name": "Espressif Documentation",
+      "kind": "official",
+      "domains": [
+        "electronics",
+        "embedded",
+        "computing",
+        "networking_security",
+        "robotics"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "verify",
+        "code",
+        "design",
+        "compare"
+      ],
+      "authority": "primary",
+      "cost": "free",
+      "labels": {
+        "domains": "docs.espressif.com"
+      }
+    },
+    {
+      "id": "microbit_docs",
+      "name": "micro:bit Technical Documentation",
+      "kind": "official",
+      "domains": [
+        "electronics",
+        "embedded",
+        "computing",
+        "robotics",
+        "engineering_design"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "verify",
+        "code",
+        "design",
+        "compare"
+      ],
+      "authority": "primary",
+      "cost": "free",
+      "labels": {
+        "domains": "tech.microbit.org,microbit.org,makecode.microbit.org"
+      }
+    },
+    {
+      "id": "creality_docs",
+      "name": "Creality Documentation",
+      "kind": "official",
+      "domains": [
+        "fabrication",
+        "mechanical_engineering",
+        "engineering_design"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "verify",
+        "design",
+        "compare"
+      ],
+      "authority": "primary",
+      "cost": "free",
+      "labels": {
+        "domains": "wiki.creality.com,creality.com"
+      }
+    },
+    {
+      "id": "prusa_docs",
+      "name": "Prusa Knowledge Base",
+      "kind": "official",
+      "domains": [
+        "fabrication",
+        "mechanical_engineering",
+        "engineering_design"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "verify",
+        "design",
+        "compare"
+      ],
+      "authority": "primary",
+      "cost": "free",
+      "labels": {
+        "domains": "help.prusa3d.com,prusa3d.com"
+      }
+    },
+    {
+      "id": "bambu_docs",
+      "name": "Bambu Lab Wiki",
+      "kind": "official",
+      "domains": [
+        "fabrication",
+        "mechanical_engineering",
+        "engineering_design"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "verify",
+        "design",
+        "compare"
+      ],
+      "authority": "primary",
+      "cost": "free",
+      "labels": {
+        "domains": "wiki.bambulab.com,bambulab.com"
+      }
+    },
+    {
+      "id": "klipper_docs",
+      "name": "Klipper Documentation",
+      "kind": "official",
+      "domains": [
+        "fabrication",
+        "embedded",
+        "computing"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "verify",
+        "code"
+      ],
+      "authority": "primary",
+      "cost": "free",
+      "labels": {
+        "domains": "klipper3d.org"
+      }
+    },
+    {
+      "id": "marlin_docs",
+      "name": "Marlin Firmware Documentation",
+      "kind": "official",
+      "domains": [
+        "fabrication",
+        "embedded",
+        "computing"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "verify",
+        "code"
+      ],
+      "authority": "primary",
+      "cost": "free",
+      "labels": {
+        "domains": "marlinfw.org"
+      }
+    },
+    {
+      "id": "octoprint_docs",
+      "name": "OctoPrint Documentation",
+      "kind": "official",
+      "domains": [
+        "fabrication",
+        "computing",
+        "networking_security"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "verify",
+        "code"
+      ],
+      "authority": "primary",
+      "cost": "free",
+      "labels": {
+        "domains": "docs.octoprint.org,octoprint.org"
+      }
+    },
+    {
+      "id": "webots_docs",
+      "name": "Webots / Cyberbotics Documentation",
+      "kind": "official",
+      "domains": [
+        "robotics",
+        "computing",
+        "physics",
+        "engineering_design"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "verify",
+        "code",
+        "design"
+      ],
+      "authority": "primary",
+      "cost": "free",
+      "labels": {
+        "domains": "cyberbotics.com"
+      }
+    },
+    {
+      "id": "python_docs",
+      "name": "Python Documentation",
+      "kind": "official",
+      "domains": [
+        "computing",
+        "ai_data"
+      ],
+      "intents": [
+        "explain",
+        "troubleshoot",
+        "configure",
+        "verify",
+        "code",
+        "compare"
+      ],
+      "authority": "primary",
+      "cost": "free",
+      "labels": {
+        "domains": "docs.python.org"
+      }
+    },
+    {
+      "id": "nasa",
+      "name": "NASA",
+      "kind": "institutional",
+      "domains": [
+        "physics",
+        "astronomy_space",
+        "aerospace",
+        "earth_science",
+        "robotics",
+        "engineering_design"
+      ],
+      "intents": [
+        "explain",
+        "research",
+        "design",
+        "verify",
+        "brainstorm"
+      ],
+      "authority": "institutional",
+      "cost": "free"
+    },
+    {
+      "id": "esa_esero",
+      "name": "ESA / ESERO",
+      "kind": "institutional",
+      "domains": [
+        "astronomy_space",
+        "aerospace",
+        "physics",
+        "earth_science",
+        "robotics",
+        "engineering_design"
+      ],
+      "intents": [
+        "explain",
+        "research",
+        "design",
+        "brainstorm",
+        "verify"
+      ],
+      "authority": "institutional",
+      "cost": "free"
+    },
+    {
+      "id": "nist",
+      "name": "NIST",
+      "kind": "institutional",
+      "domains": [
+        "measurement",
+        "physics",
+        "chemistry_materials",
+        "engineering_design",
+        "electronics"
+      ],
+      "intents": [
+        "explain",
+        "research",
+        "verify",
+        "design"
+      ],
+      "authority": "institutional",
+      "cost": "free"
+    },
+    {
+      "id": "stem_learning_uk",
+      "name": "STEM Learning UK",
+      "kind": "educational_curated",
+      "domains": [
+        "*"
+      ],
+      "intents": [
+        "explain",
+        "brainstorm",
+        "design",
+        "research"
+      ],
+      "authority": "institutional",
+      "cost": "free"
+    },
+    {
+      "id": "starnet",
+      "name": "STAR Net STEM Activity Clearinghouse",
+      "kind": "educational_curated",
+      "domains": [
+        "*"
+      ],
+      "intents": [
+        "explain",
+        "brainstorm",
+        "design",
+        "research"
+      ],
+      "authority": "institutional",
+      "cost": "free"
+    },
+    {
+      "id": "wpi_iamstem",
+      "name": "WPI I am STEM",
+      "kind": "educational_curated",
+      "domains": [
+        "computing",
+        "mathematics_statistics",
+        "physics",
+        "engineering_design"
+      ],
+      "intents": [
+        "explain",
+        "brainstorm",
+        "design"
+      ],
+      "authority": "institutional",
+      "cost": "free",
+      "notes": "Useful mostly for the lower part of the target age range."
+    },
+    {
+      "id": "plos",
+      "name": "PLOS",
+      "kind": "scholarly",
+      "domains": [
+        "biology",
+        "chemistry_materials",
+        "physics",
+        "earth_science",
+        "ai_data",
+        "mathematics_statistics",
+        "multidisciplinary"
+      ],
+      "intents": [
+        "research",
+        "explain",
+        "verify",
+        "design"
+      ],
+      "authority": "peer_reviewed",
+      "connector": "plos",
+      "peer_review": true,
+      "cost": "free"
+    },
+    {
+      "id": "arxiv",
+      "name": "arXiv",
+      "kind": "scholarly",
+      "domains": [
+        "physics",
+        "mathematics_statistics",
+        "computing",
+        "networking_security",
+        "robotics",
+        "ai_data",
+        "electronics",
+        "embedded",
+        "astronomy_space",
+        "multidisciplinary"
+      ],
+      "intents": [
+        "research",
+        "explain",
+        "verify",
+        "design"
+      ],
+      "authority": "preprint",
+      "connector": "arxiv",
+      "peer_review": false,
+      "requires_crosscheck": true,
+      "cost": "free",
+      "labels": {
+        "warning": "Preprint - peer review status not established by arXiv"
+      }
+    },
+    {
+      "id": "openalex",
+      "name": "OpenAlex",
+      "kind": "scholarly_index",
+      "domains": [
+        "*"
+      ],
+      "intents": [
+        "research",
+        "explain",
+        "verify",
+        "design"
+      ],
+      "authority": "scholarly_index",
+      "connector": "openalex",
+      "cost": "free_tier",
+      "notes": "API key required; free key has a daily allowance."
+    },
+    {
+      "id": "crossref",
+      "name": "Crossref",
+      "kind": "scholarly_index",
+      "domains": [
+        "*"
+      ],
+      "intents": [
+        "research",
+        "verify"
+      ],
+      "authority": "scholarly_index",
+      "connector": "crossref",
+      "cost": "free"
+    },
+    {
+      "id": "semantic_scholar",
+      "name": "Semantic Scholar",
+      "kind": "scholarly_index",
+      "domains": [
+        "*"
+      ],
+      "intents": [
+        "research",
+        "explain",
+        "verify",
+        "design"
+      ],
+      "authority": "scholarly_index",
+      "connector": "semantic_scholar",
+      "cost": "free_tier",
+      "notes": "Public unauthenticated traffic shares a common throttle pool. A free API key is recommended for reliable use; connector degrades cleanly on HTTP 429."
+    },
+    {
+      "id": "community",
+      "name": "Community evidence (forums, Reddit, unofficial issues)",
+      "kind": "community",
+      "domains": [
+        "*"
+      ],
+      "intents": [
+        "troubleshoot",
+        "configure",
+        "compare"
+      ],
+      "authority": "community",
+      "requires_crosscheck": true,
+      "cost": "free",
+      "notes": "Useful for symptoms and workarounds, but do not treat as final verification when primary evidence is available."
+    }
+  ]
+}
