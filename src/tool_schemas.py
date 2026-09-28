@@ -26,6 +26,7 @@ _REQUIRED_NATIVE_TOOL_ARGS = {
     "write_file": ("path",),
     "edit_file": ("path",),
     "apply_patch": ("patch_text", "patchText", "patch"),
+    "stl_analyze": ("attachment_id",),
 }
 
 # ---------------------------------------------------------------------------
@@ -87,6 +88,24 @@ FUNCTION_TOOL_SCHEMAS = [
                     "full": {"type": "boolean", "description": "Raise the download budget to the hard cap for large pages/files. Use only after a result reported partial content."}
                 },
                 "required": ["url"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "stl_analyze",
+            "description": "Analyze an STL attachment owned by the current user using the isolated STL geometry service. Use the attachment_id from the chat attachment_ref. Never invent an attachment_id. This tool reads only that STL attachment and does not provide general filesystem access.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "attachment_id": {
+                        "type": "string",
+                        "description": "Exact attachment_id from the STL attachment_ref in the current conversation."
+                    }
+                },
+                "required": ["attachment_id"],
+                "additionalProperties": False
             }
         }
     },
@@ -1413,7 +1432,9 @@ def function_call_to_tool_block(name: str, arguments: str) -> Optional[ToolBlock
         return None
 
     # Convert structured args back to the text format each tool expects
-    if tool_type == "bash":
+    if tool_type == "stl_analyze":
+        content = json.dumps(args)
+    elif tool_type == "bash":
         content = args.get("command", "")
     elif tool_type == "python":
         content = args.get("code", "")

@@ -4015,7 +4015,7 @@ async def stream_agent_loop(
         if _relevant_tools is None:
             from src.tool_index import ALWAYS_AVAILABLE
             _relevant_tools = set(ALWAYS_AVAILABLE)
-        _relevant_tools.update({"read_file", "grep", "ls", "manage_documents"})
+        _relevant_tools.update({"read_file", "grep", "ls", "manage_documents", "stl_analyze"})
 
     # Per-request forced tools are stronger than retrieval. Explicit search
     # settings make web tools visible even when tool RAG misses them;
