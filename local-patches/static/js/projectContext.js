@@ -46,7 +46,7 @@ function ensureStyle() {
       }
 
       #project-context-menu {
-        display: block !important;
+        display: block;
         position: absolute;
         top: calc(100% + 6px);
         right: 0;
