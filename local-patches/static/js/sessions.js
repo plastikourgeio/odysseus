@@ -2350,6 +2350,24 @@ export async function materializePendingSession() {
     }
     _pendingChat = null;
     currentSessionId = payload.id;
+
+    // Refresh Project Context immediately when a deferred New Chat
+    // becomes a persisted session after the first message.
+    if (payload.id) {
+      import('./projectContext.js?v=20260923pc03ui1')
+        .then((module) => {
+          if (module?.refreshProjectContextUI) {
+            module.refreshProjectContextUI(payload.id);
+          }
+        })
+        .catch((error) => {
+          console.warn(
+            'Project Context UI load failed after session materialization:',
+            error
+          );
+        });
+    }
+
     if (!isIncognito) {
       Storage.set('lastSessionId', payload.id);
       history.replaceState(null, '', '#' + payload.id);
