@@ -14,4 +14,3 @@ services:
       - "/srv/docker/stacks/odysseus/local-patches/routes/session_routes.py:/app/routes/session_routes.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/routes/project_routes.py:/app/routes/project_routes.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/static/js/sessions.js:/app/static/js/sessions.js:ro"
-      - "/srv/docker/stacks/odysseus/local-patches/static/js/projectContext.js:/app/static/js/projectContext.js:ro"
