@@ -285,6 +285,7 @@ let _sessionListFocused = false;
 function _deselectCurrentSession(sid) {
   if (currentSessionId !== sid) return;
   currentSessionId = null;
+  window.projectContextUI?.refresh?.(null);
   uiModule.el('chat-history').innerHTML = '';
   uiModule.el('current-meta').textContent = 'Odysseus Chat';
   Storage.remove('lastSessionId');
@@ -1799,6 +1800,8 @@ export async function loadSessions() {
 
     // No session selected — still enable input so slash commands (e.g. /setup) work
     if (!targetId && !hasPendingChat) {
+      currentSessionId = null;
+      window.projectContextUI?.refresh?.(null);
       const msgInput = document.getElementById('message');
       if (msgInput) {
         msgInput.disabled = false;
@@ -1941,6 +1944,18 @@ export async function selectSession(id, { keepSidebar = false, showLoading = tru
     }
     // Update model picker visibility
     updateModelPicker();
+
+    // ODYSSEUS PROJECT CONTEXT UI v0.3
+    import('./projectContext.js?v=20261001pc04hidden1')
+      .then((module) => {
+        if (module?.refreshProjectContextUI) {
+          module.refreshProjectContextUI(id);
+        }
+      })
+      .catch((error) => {
+        console.warn('Project Context UI load failed:', error);
+      });
+
     if (window.refreshChatContextHeader) window.refreshChatContextHeader('select-session');
 
     // Refresh session cost badge for the newly selected session
@@ -2225,6 +2240,7 @@ export function createDirectChat(url, modelId, endpointId, opts = {}) {
   _skipAutoSelect = true;
   _suppressNextSessionLoading = true;
   currentSessionId = null;
+  window.projectContextUI?.refresh?.(null);
   try { window.__odysseusLastSelectedSessionId = ''; } catch (_) {}
   Storage.remove('lastSessionId');
   history.replaceState(null, '', window.location.pathname);
@@ -2334,6 +2350,24 @@ export async function materializePendingSession() {
     }
     _pendingChat = null;
     currentSessionId = payload.id;
+
+    // Refresh Project Context immediately when a deferred New Chat
+    // becomes a persisted session after the first message.
+    if (payload.id) {
+      import('./projectContext.js?v=20261001pc04hidden1')
+        .then((module) => {
+          if (module?.refreshProjectContextUI) {
+            module.refreshProjectContextUI(payload.id);
+          }
+        })
+        .catch((error) => {
+          console.warn(
+            'Project Context UI load failed after session materialization:',
+            error
+          );
+        });
+    }
+
     if (!isIncognito) {
       Storage.set('lastSessionId', payload.id);
       history.replaceState(null, '', '#' + payload.id);

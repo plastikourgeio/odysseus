@@ -21,6 +21,10 @@ function ensureStyle() {
         margin-left: 6px;
       }
 
+      #project-context-wrap[hidden] {
+        display: none !important;
+      }
+
       #project-context-btn {
         max-width: 220px;
         height: 25px;
