@@ -11,5 +11,4 @@ services:
       - "/srv/docker/stacks/odysseus/local-patches/core/models.py:/app/core/models.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/core/session_manager.py:/app/core/session_manager.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/routes/session_routes.py:/app/routes/session_routes.py:ro"
-      - "/srv/docker/stacks/odysseus/local-patches/routes/project_routes.py:/app/routes/project_routes.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/static/js/sessions.js:/app/static/js/sessions.js:ro"
