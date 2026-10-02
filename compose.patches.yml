@@ -1,7 +1,6 @@
 services:
   odysseus:
     volumes:
-      - "/srv/docker/stacks/odysseus/local-patches/src/tool_approvals.py:/app/src/tool_approvals.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/services/search/content.py:/app/services/search/content.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/src/llm_core.py:/app/src/llm_core.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/src/deep_research.py:/app/src/deep_research.py:ro"

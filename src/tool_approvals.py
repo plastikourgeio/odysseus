@@ -86,6 +86,39 @@ def _normalized_continuation_query(value: Any) -> str:
     return str(value or "").strip()[:_MAX_APPROVAL_CONTINUATION_QUERY_CHARS]
 
 
+def _normalized_native_call(value: Any) -> dict[str, Any] | None:
+    """Return a JSON-safe copy of a provider-native function call.
+
+    Exact-action approval is a turn boundary.  Preserve the original call id,
+    arguments and provider metadata (notably Gemini thought_signature carried
+    in extra_content) so the approved result can be replayed as a real tool
+    response instead of generic context.
+    """
+    if not isinstance(value, dict):
+        return None
+
+    name = str(value.get("name") or "").strip()
+    if not name:
+        return None
+
+    call = {
+        "id": str(value.get("id") or ""),
+        "name": name,
+        "arguments": str(value.get("arguments") or "{}"),
+    }
+
+    if value.get("extra_content") is not None:
+        try:
+            call["extra_content"] = json.loads(
+                json.dumps(value["extra_content"], ensure_ascii=False)
+            )
+        except (TypeError, ValueError):
+            # Do not persist malformed/non-JSON provider metadata.
+            pass
+
+    return call
+
+
 def _canonical_digest(payload: dict[str, Any]) -> str:
     encoded = json.dumps(
         payload,
@@ -117,6 +150,7 @@ def _binding_payload(
     continuation_query: Any,
     effects: tuple[str, ...],
     result_integrity: str,
+    native_call: Any = None,
 ) -> dict[str, Any]:
     return {
         "owner": _normalized_owner(owner),
@@ -137,6 +171,7 @@ def _binding_payload(
         "continuation_query": _normalized_continuation_query(continuation_query),
         "effects": list(effects),
         "result_integrity": str(result_integrity),
+        "native_call": _normalized_native_call(native_call),
     }
 
 
@@ -158,10 +193,11 @@ class PendingToolApproval:
     digest: str
     created_at: float
     expires_at: float
-    # Server-only continuation state. Both fields are digest-bound and never
+    # Server-only continuation state. These fields are digest-bound and never
     # exposed in the browser payload.
     selected_tools: tuple[str, ...] = ()
     continuation_query: str = ""
+    native_call: dict[str, Any] | None = None
 
     def public_payload(self, *, reason: str | None = None) -> dict[str, Any]:
         return {
@@ -270,6 +306,7 @@ class ExactToolApproval:
             continuation_query=self.pending.continuation_query,
             effects=effects,
             result_integrity=result_integrity,
+            native_call=self.pending.native_call,
         )
         return _canonical_digest(expected) == self.pending.digest
 
@@ -350,6 +387,7 @@ class ToolApprovalStore:
         document_digest: Any = None,
         selected_tools: Any = None,
         continuation_query: Any = None,
+        native_call: Any = None,
         external_untrusted_context_seen: bool,
         capabilities: ToolCapabilities,
     ) -> PendingToolApproval:
@@ -371,6 +409,7 @@ class ToolApprovalStore:
             continuation_query=continuation_query,
             effects=effects,
             result_integrity=result_integrity,
+            native_call=native_call,
         )
         pending = PendingToolApproval(
             approval_id=secrets.token_urlsafe(32),
@@ -393,6 +432,7 @@ class ToolApprovalStore:
             expires_at=now + self._ttl_seconds,
             selected_tools=tuple(payload["selected_tools"]),
             continuation_query=payload["continuation_query"],
+            native_call=payload.get("native_call"),
         )
         with self._lock:
             self._purge_expired_locked(now)
