@@ -22,6 +22,7 @@ from src.session_image_cleanup import _generated_image_path_for_cleanup, session
 from src.session_actions import is_session_recently_active
 from src.upload_handler import reserve_message_upload_references
 from src.tool_approval_scopes import sanitize_client_message_metadata
+from routes.project_routes import router as project_router
 
 
 def _sanitize_export_filename(name: str) -> str:
@@ -136,6 +137,8 @@ router = APIRouter(
     tags=["sessions"],
     dependencies=[Depends(require_chat_api_token_scope)],
 )
+
+router.include_router(project_router)
 
 def _current_user_is_admin(request: Request, user: str | None) -> bool:
     if is_delegated_credential(request):

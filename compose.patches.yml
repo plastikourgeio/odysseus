@@ -8,4 +8,3 @@ services:
       - "/srv/docker/stacks/odysseus/local-patches/src/research_handler.py:/app/src/research_handler.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/routes/chat_helpers.py:/app/routes/chat_helpers.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/core/database.py:/app/core/database.py:ro"
-      - "/srv/docker/stacks/odysseus/local-patches/routes/session_routes.py:/app/routes/session_routes.py:ro"
