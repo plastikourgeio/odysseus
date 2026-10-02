@@ -1,4 +1,0 @@
-services:
-  odysseus:
-    volumes:
-      - "/srv/docker/stacks/odysseus/local-patches/services/search/content.py:/app/services/search/content.py:ro"

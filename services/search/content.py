@@ -1,5 +1,18 @@
 """Webpage content fetching with caching, PDF extraction, and summarization helpers."""
 
+# STEM_PDFMINER_VENDOR_V0_8_1
+# pdfminer.six is installed outside the immutable container image so the
+# dependency survives Odysseus container recreation. Put that isolated vendor
+# to the import path only when needed; the rest of services.search.content remains unchanged.
+import sys as _stem_pdf_sys
+from pathlib import Path as _stem_pdf_Path
+_stem_pdf_vendor = _stem_pdf_Path("/app/data/stem_pdf_vendor")
+if _stem_pdf_vendor.is_dir():
+    _stem_pdf_vendor_s = str(_stem_pdf_vendor)
+    if _stem_pdf_vendor_s not in _stem_pdf_sys.path:
+        _stem_pdf_sys.path.append(_stem_pdf_vendor_s)
+
+
 import copy
 import io
 import json
@@ -224,6 +237,53 @@ def fetch_webpage_content(url: str, timeout: int = 5, retry_attempt: int = 0,
         response = _get_public_url(url, headers=headers, timeout=timeout,
                                    max_bytes=effective_cap)
 
+        # SiteGround anti-bot may intermittently return HTTP 202 with a tiny
+        # meta-refresh page pointing to /.well-known/sgcaptcha/ instead of
+        # the requested document. Retry instead of parsing/caching it.
+        for _sg_attempt in range(4):
+            _body_head = (response.text or "")[:1200].lower()
+            _sg_header = str(
+                response.headers.get("sg-captcha", "") or ""
+            ).lower()
+
+            _is_sg_challenge = (
+                response.status_code == 202
+                and (
+                    "/.well-known/sgcaptcha/" in _body_head
+                    or _sg_header == "challenge"
+                )
+            )
+
+            if not _is_sg_challenge:
+                break
+
+            logger.warning(
+                "SiteGround anti-bot challenge for %s (attempt %d)",
+                url,
+                _sg_attempt + 1,
+            )
+
+            if _sg_attempt == 1:
+                return _empty_result(
+                    url,
+                    "SiteGround anti-bot challenge (HTTP 202)",
+                )
+
+            import time
+            time.sleep(1.0)
+
+            _retry_headers = dict(headers)
+            _retry_headers["Accept-Encoding"] = "identity"
+            _retry_headers["Cache-Control"] = "no-cache"
+            _retry_headers["Pragma"] = "no-cache"
+
+            response = _get_public_url(
+                url,
+                headers=_retry_headers,
+                timeout=timeout,
+                max_bytes=effective_cap,
+            )
+
         if response.status_code == 429:
             raise RateLimitError(f"Rate limit hit for {url} (attempt {retry_attempt})")
 
@@ -369,23 +429,40 @@ def fetch_webpage_content(url: str, timeout: int = 5, retry_attempt: int = 0,
             if len(body_text) > len(main_content):
                 main_content = body_text
 
+    extracted_lists = _extract_lists(soup)
+    extracted_tables = _extract_tables(soup)
+    extracted_code_blocks = _extract_code_blocks(soup)
+
+    has_readable_content = bool(
+        main_content.strip()
+        or extracted_lists
+        or extracted_tables
+        or extracted_code_blocks
+    )
+
     result = {
         "url": url,
         "title": title_text,
         "content": main_content,
-        "lists": _extract_lists(soup),
-        "tables": _extract_tables(soup),
-        "code_blocks": _extract_code_blocks(soup),
+        "lists": extracted_lists,
+        "tables": extracted_tables,
+        "code_blocks": extracted_code_blocks,
         "meta_description": meta_info.get("description", ""),
         "meta_keywords": meta_info.get("keywords", ""),
         "og_image": og_image,
         "js_rendered": js_rendered,
         "js_message": js_message,
-        "success": True,
-        "error": "",
+        "success": has_readable_content,
+        "error": "" if has_readable_content else "No readable text content",
         **_size_fields,
     }
-    _cache_result(cache_file, cache_key, result, url)
+
+    # Never poison the two-hour content cache with an empty HTML response.
+    # A later request may succeed even if an upstream server returned a
+    # transient empty/challenge/interstitial response on this attempt.
+    if has_readable_content:
+        _cache_result(cache_file, cache_key, result, url)
+
     return result
 
 
