@@ -718,10 +718,20 @@ class ResearchHandler:
 
     @staticmethod
     async def _probe_endpoint(endpoint: str, model: str, headers: dict = None):
-        """Quick probe to verify the LLM endpoint/model responds before research."""
+        """Verify the research model with transient-error retries and cooldown."""
         from src.llm_core import llm_call_async
+        from src.settings import get_setting
+
         try:
-            logger.info(f"Probing {model} at {endpoint} (has_auth={bool(headers and 'Authorization' in (headers or {}))})")
+            logger.info(
+                f"Probing {model} at {endpoint} "
+                f"(has_auth={bool(headers and 'Authorization' in (headers or {}))})"
+            )
+
+            # llm_call_async contains provider-aware retry/backoff for
+            # 429/502/503/504. The old max_retries=1 bypassed that protection
+            # entirely, causing Deep Research to abort on a single transient
+            # Google rate-limit response.
             await llm_call_async(
                 url=endpoint,
                 model=model,
@@ -730,12 +740,41 @@ class ResearchHandler:
                 max_tokens=5,
                 headers=headers,
                 timeout=15,
-                max_retries=1,
+                max_retries=4,
             )
+
             logger.info(f"Endpoint probe OK: {model}")
+
+            # The probe itself consumes one provider request. Leave the same
+            # minimum interval used by Deep Research before planning starts,
+            # otherwise a successful probe can immediately trigger another
+            # Gemini request and hit the same RPM window.
+            try:
+                cooldown = float(
+                    get_setting(
+                        "research_llm_min_interval_seconds",
+                        10,
+                    )
+                    or 0
+                )
+            except (TypeError, ValueError):
+                cooldown = 10.0
+
+            cooldown = min(60.0, max(0.0, cooldown))
+
+            if cooldown > 0:
+                logger.info(
+                    "Research probe cooldown: waiting %.1fs "
+                    "before starting Deep Research",
+                    cooldown,
+                )
+                await asyncio.sleep(cooldown)
+
         except Exception as e:
             logger.error(f"Probe failed for {model}: {e}")
-            raise RuntimeError(_format_probe_failure(model, e)) from e
+            raise RuntimeError(
+                _format_probe_failure(model, e)
+            ) from e
 
     async def call_research_service(
         self,
