@@ -30,7 +30,7 @@ class TimestampMixin:
     @declared_attr
     def created_at(cls):
         return Column(DateTime, default=utcnow_naive, nullable=False)
-    
+
     @declared_attr
     def updated_at(cls):
         return Column(DateTime, default=utcnow_naive, onupdate=utcnow_naive, nullable=False)
@@ -172,32 +172,82 @@ class EncryptedText(TypeDecorator):
         return decrypt(value)
 
 
+class ProjectContext(TimestampMixin, Base):
+    """Persistent owner-scoped STEM project context."""
+
+    __tablename__ = "projects"
+
+    id = Column(String, primary_key=True, index=True)
+
+    owner = Column(
+        String,
+        nullable=False,
+        index=True,
+    )
+
+    title = Column(
+        String,
+        nullable=False,
+    )
+
+    goal = Column(
+        Text,
+        nullable=False,
+        default="",
+    )
+
+    status = Column(
+        String,
+        nullable=False,
+        default="active",
+        index=True,
+    )
+
+    state_json = Column(
+        JSON,
+        nullable=False,
+        default=dict,
+    )
+
+    __table_args__ = (
+        Index(
+            "ix_projects_owner_status",
+            "owner",
+            "status",
+        ),
+    )
+
+
 class Session(TimestampMixin, Base):
     """
     SQLAlchemy model for Session table.
     Represents a chat session with its configuration and metadata.
     """
     __tablename__ = "sessions"
-    
+
     # Primary key
     id = Column(String, primary_key=True, index=True)
-    
+
     # Session metadata
     name = Column(String, nullable=False)
     endpoint_url = Column(String, nullable=False)
     model = Column(String, nullable=False)
     owner = Column(String, nullable=True, index=True)  # username; null = legacy/shared
-    
+
     # Configuration flags
     rag = Column(Boolean, default=False)
     archived = Column(Boolean, default=False)
 
     # Organization
     folder = Column(String, nullable=True, default=None)
-    
+
+    # Optional STEM project this chat belongs to.
+    # Referential/owner integrity is enforced by project_context.py.
+    project_id = Column(String, nullable=True, index=True)
+
     # Headers stored as JSON
     headers = Column(JSON, default=dict)
-    
+
     # Timestamps are provided by TimestampMixin
     last_accessed = Column(DateTime, default=func.now(), onupdate=func.now())
     # Timestamp of the last actual MESSAGE in this session. Set explicitly
@@ -206,14 +256,14 @@ class Session(TimestampMixin, Base):
     # opening the chat (all of which bump updated_at and last_accessed).
     # The "Last active" sort uses this.
     last_message_at = Column(DateTime, nullable=True, default=None)
-    
-    
+
+
     # Indexes - optimized composites
     __table_args__ = (
         Index('ix_sessions_active', 'archived', 'last_accessed'),
         Index('ix_sessions_search', 'name', 'archived'),
     )
-    
+
     # Properties
     is_important = Column(Boolean, default=False)
     message_count = Column(Integer, default=0)
@@ -224,12 +274,12 @@ class Session(TimestampMixin, Base):
 
     # Relationship to chat messages
     messages = relationship("ChatMessage", back_populates="session", cascade="all, delete-orphan")
-    
+
     @property
     def is_active(self):
         """Check if session is active (not archived)"""
         return not self.archived
-    
+
     def to_dict(self):
         """Convert session to dictionary for JSON serialization"""
         return {
@@ -257,13 +307,13 @@ class ChatMessage(Base):
     Represents individual chat messages within a session.
     """
     __tablename__ = "chat_messages"
-    
+
     # Primary key - using String to support UUIDs
     id = Column(String, primary_key=True, index=True)
-    
+
     # Foreign key to Session
     session_id = Column(String, ForeignKey("sessions.id", ondelete="CASCADE"), nullable=False, index=True)
-    
+
     # Message content
     role = Column(String, nullable=False)
     content = Column(Text, nullable=False)
@@ -271,10 +321,10 @@ class ChatMessage(Base):
 
     # Timestamp
     timestamp = Column(DateTime, default=utcnow_naive)
-    
+
     # Relationship to Session
     session = relationship("Session", back_populates="messages")
-    
+
     # Indexes - optimized composite
     __table_args__ = (
         Index('ix_messages_session_time', 'session_id', 'timestamp'),  # Composite for efficient message retrieval
@@ -836,13 +886,13 @@ class Memory(Base):
     Represents persistent memory entries with metadata.
     """
     __tablename__ = "memories"
-    
+
     # Primary key
     id = Column(String, primary_key=True, index=True)
-    
+
     # Memory content
     text = Column(Text, nullable=False)
-    
+
     # Categorization
     category = Column(String, default='fact')
     source = Column(String, default='user')
@@ -2058,6 +2108,63 @@ def _migrate_seed_email_account():
 # Any future migrations or schema changes that temporarily violate foreign-key
 # constraints will fail. To perform such operations, foreign_keys must be
 # temporarily disabled around the migration workflow.
+def _migrate_add_project_context_v01():
+    """Add project-context session linkage to existing databases."""
+
+    try:
+        from sqlalchemy import inspect as sa_inspect
+        from sqlalchemy import text as sa_text
+
+        inspector = sa_inspect(engine)
+
+        # ProjectContext is part of Base.metadata, so create_all() above
+        # creates the projects table. Existing sessions tables still need
+        # their new nullable column added explicitly.
+        session_columns = {
+            col["name"]
+            for col in inspector.get_columns("sessions")
+        }
+
+        if "project_id" not in session_columns:
+            with engine.begin() as conn:
+                conn.execute(
+                    sa_text(
+                        "ALTER TABLE sessions "
+                        "ADD COLUMN project_id VARCHAR"
+                    )
+                )
+
+            logging.getLogger(__name__).info(
+                "Added project_id column to sessions"
+            )
+
+        inspector = sa_inspect(engine)
+
+        session_indexes = {
+            idx.get("name")
+            for idx in inspector.get_indexes("sessions")
+        }
+
+        if "ix_sessions_project_id" not in session_indexes:
+            with engine.begin() as conn:
+                conn.execute(
+                    sa_text(
+                        "CREATE INDEX ix_sessions_project_id "
+                        "ON sessions (project_id)"
+                    )
+                )
+
+            logging.getLogger(__name__).info(
+                "Added project_id index to sessions"
+            )
+
+    except Exception as e:
+        logging.getLogger(__name__).warning(
+            "project context migration: %s",
+            e,
+        )
+
+
 def init_db():
     """
     Initialize the database by creating all tables.
@@ -2114,6 +2221,7 @@ def init_db():
     _migrate_add_document_archived_column()
     _migrate_add_last_message_at_column()
     _migrate_add_folder_column()
+    _migrate_add_project_context_v01()
     _migrate_add_token_columns()
     _migrate_add_mode_column()
     _migrate_add_multiuser_owner_columns()
@@ -2611,16 +2719,16 @@ def bulk_insert_messages(session_id: str, messages: list):
 def cleanup_old_sessions(days: int = 30):
     """Remove sessions older than specified days"""
     from datetime import timedelta
-    
+
     with get_db_session() as db:
         cutoff_date = utcnow_naive() - timedelta(days=days)
-        
+
         deleted_count = db.query(Session).filter(
             Session.archived == True,
             Session.last_accessed < cutoff_date,
             Session.is_important == False
         ).delete()
-        
+
         return deleted_count
 
 def get_session_stats():
@@ -2638,18 +2746,18 @@ def get_session_stats():
 def get_detailed_stats():
     """Get comprehensive database statistics including file size"""
     stats = get_session_stats()  # Use existing function
-    
+
     # Add database file size
     db_size_mb = 0.0
     if "sqlite" in DATABASE_URL:
         db_path = DATABASE_URL.replace("sqlite:///", "")
         if not os.path.isabs(db_path):
             db_path = os.path.abspath(db_path)
-        
+
         if os.path.exists(db_path):
             db_size = os.path.getsize(db_path)
             db_size_mb = round(db_size / (1024 * 1024), 2)
-    
+
     stats['database_size_mb'] = db_size_mb
     return stats
 
