@@ -762,6 +762,80 @@ async def build_chat_context(
     # stale normal session id. Only the ephemeral incognito transcript is safe.
     messages = preface + (_incognito_messages(session_id) if incognito else sess.get_context_messages())
 
+    # ODYSSEUS PROJECT CONTEXT READ PATH v0.2
+    #
+    # Project state is persistent user-owned data, not a system instruction.
+    # Keep it out of the stable system prompt and inject it close to the
+    # current user turn. route_messages is captured below, so every foreground
+    # model candidate receives the same project state.
+    #
+    # Do not arm the external-content tool gate: project state is first-party
+    # user/project data, while the guarded wrapper still prevents it from
+    # gaining system-level authority.
+    _project_id = getattr(sess, "project_id", None)
+
+    if (
+        _project_id
+        and user
+        and not incognito
+        and not is_research_spinoff
+        and not casual_low_signal
+    ):
+        try:
+            from src.project_context import render_project_context
+
+            _project_text = render_project_context(
+                _project_id,
+                user,
+            )
+
+            if _project_text:
+                _project_msg = untrusted_context_message(
+                    "project context",
+                    _project_text,
+                    provenance_origin="project_context",
+                    arm_tool_gate=False,
+                )
+
+                _project_msg.setdefault(
+                    "metadata",
+                    {},
+                )["project_id"] = _project_id
+
+                if (
+                    messages
+                    and messages[-1].get("role") == "user"
+                ):
+                    messages.insert(
+                        len(messages) - 1,
+                        _project_msg,
+                    )
+                else:
+                    messages.append(_project_msg)
+
+                logger.info(
+                    "[project-context] injected "
+                    "session=%s project=%s",
+                    session_id,
+                    _project_id,
+                )
+
+            else:
+                logger.warning(
+                    "[project-context] linked project unavailable "
+                    "session=%s project=%s",
+                    session_id,
+                    _project_id,
+                )
+
+        except Exception:
+            # Project Context must never make an otherwise valid chat fail.
+            logger.warning(
+                "[project-context] injection failed session=%s",
+                session_id,
+                exc_info=True,
+            )
+
     # Current date/time — injected as a standalone *user*-role context message
     # placed immediately before the latest user turn, NOT folded into the
     # system prompt. Its text changes every minute, and local OpenAI-compatible

@@ -5,4 +5,3 @@ services:
       - "/srv/docker/stacks/odysseus/local-patches/src/llm_core.py:/app/src/llm_core.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/src/deep_research.py:/app/src/deep_research.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/src/research_handler.py:/app/src/research_handler.py:ro"
-      - "/srv/docker/stacks/odysseus/local-patches/routes/chat_helpers.py:/app/routes/chat_helpers.py:ro"
