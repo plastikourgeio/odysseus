@@ -242,6 +242,31 @@ class DeepResearcher:
         self.evolving_report: str = ""
         self.research_plan: str = ""
 
+        # Deep Research can issue many different LLM calls in rapid
+        # succession: planning, query generation, extraction, synthesis,
+        # stop decisions, and final report generation.  Hosted providers
+        # such as Gemini apply request-rate limits across all of them, so
+        # throttle the complete research run rather than extraction alone.
+        try:
+            from src.settings import get_setting
+
+            _interval = get_setting(
+                "research_llm_min_interval_seconds"
+            )
+            self.llm_min_interval = float(
+                _interval if _interval is not None else 10.0
+            )
+        except Exception:
+            self.llm_min_interval = 10.0
+
+        self.llm_min_interval = min(
+            60.0,
+            max(0.0, self.llm_min_interval),
+        )
+
+        self._llm_pace_lock = asyncio.Lock()
+        self._last_llm_finished_at = 0.0
+
     def cancel(self):
         """Request cooperative cancellation of the research loop."""
         self._cancelled = True
@@ -380,17 +405,45 @@ class DeepResearcher:
     # ------------------------------------------------------------------
     async def _llm(self, messages: List[Dict], temperature: float = 0.3,
                    max_tokens: int = 4096, timeout: int = 60) -> str:
-        """Call the LLM asynchronously and strip thinking tags."""
+        """Call the LLM through the Deep Research pacing gate."""
         from src.llm_core import llm_call_async
-        response = await llm_call_async(
-            url=self.llm_endpoint,
-            model=self.llm_model,
-            messages=messages,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            headers=self.llm_headers,
-            timeout=timeout,
-        )
+
+        async with self._llm_pace_lock:
+            if self._last_llm_finished_at > 0:
+                elapsed = (
+                    time.monotonic()
+                    - self._last_llm_finished_at
+                )
+                wait_for = (
+                    self.llm_min_interval
+                    - elapsed
+                )
+
+                if wait_for > 0:
+                    logger.info(
+                        "Research LLM pacing: waiting %.1fs "
+                        "before next %s request",
+                        wait_for,
+                        self.llm_model,
+                    )
+                    await asyncio.sleep(wait_for)
+
+            try:
+                response = await llm_call_async(
+                    url=self.llm_endpoint,
+                    model=self.llm_model,
+                    messages=messages,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                    headers=self.llm_headers,
+                    timeout=timeout,
+                )
+            finally:
+                # Even a failed/rate-limited request establishes a new
+                # cooldown boundary. This prevents the next research phase
+                # from firing immediately after exhausted retries.
+                self._last_llm_finished_at = time.monotonic()
+
         return strip_thinking(response)
 
     # ------------------------------------------------------------------
@@ -513,9 +566,24 @@ class DeepResearcher:
         search_tasks = [self._search(q) for q in queries]
         search_results = await asyncio.gather(*search_tasks, return_exceptions=True)
 
-        # Collect URLs to fetch from all search results
+        # Collect a bounded number of URLs across ALL queries.
+        #
+        # Previously the budget was multiplied by len(queries), so four
+        # queries with the normal per-round value could trigger a large burst
+        # of LLM extraction requests and hit hosted-provider RPM limits.
         urls_to_fetch = []
+        url_budget = max(
+            1,
+            min(6, int(self.max_urls_per_round or 3) * 2),
+        )
+        logger.info(
+            "Research URL extraction budget: %d for this round",
+            url_budget,
+        )
+
         for result in search_results:
+            if len(urls_to_fetch) >= url_budget:
+                break
             if isinstance(result, Exception):
                 logger.warning(f"Search error: {result}")
                 continue
@@ -530,7 +598,7 @@ class DeepResearcher:
                         "url": url,
                         "title": r.get("title", "") or url,
                     })
-                if len(urls_to_fetch) >= self.max_urls_per_round * len(queries):
+                if len(urls_to_fetch) >= url_budget:
                     break
 
         if self._cancelled or self._time_exceeded():
@@ -543,7 +611,19 @@ class DeepResearcher:
 
         async def _bounded_extract(result: Dict) -> Optional[Dict]:
             async with semaphore:
-                return await self._fetch_and_extract(result["url"], question, result.get("title", ""))
+                finding = await self._fetch_and_extract(
+                    result["url"],
+                    question,
+                    result.get("title", ""),
+                )
+
+                # When operating sequentially against a hosted API, leave a
+                # small gap between extraction requests instead of immediately
+                # consuming the next semaphore waiter.
+                if self.extraction_concurrency <= 1:
+                    await asyncio.sleep(1.0)
+
+                return finding
 
         extract_tasks = [_bounded_extract(r) for r in urls_to_fetch]
         results_gathered = await asyncio.gather(*extract_tasks, return_exceptions=True)
@@ -927,3 +1007,27 @@ class DeepResearcher:
         if self.category:
             stats["Category"] = self.category.capitalize()
         return stats
+
+# STEM_SOURCE_DEEP_RESEARCH_BRIDGE_V0_8_2
+try:
+    from services.stem_sources import install_deep_research_bridge as _stem_install_deep_research_bridge
+    _stem_install_deep_research_bridge(DeepResearcher)
+    logger.info("STEM Source Registry v0.8.2 DeepResearch bridge enabled")
+except Exception as _stem_deep_bridge_exc:
+    logger.warning("STEM Source Registry DeepResearch bridge unavailable: %s", _stem_deep_bridge_exc)
+
+# STEM_SOURCE_DEEP_RESEARCH_BRIDGE_V0_8_2
+try:
+    from services.stem_sources import install_deep_research_bridge as _stem_install_deep_research_bridge
+    _stem_install_deep_research_bridge(DeepResearcher)
+    logger.info("STEM Source Registry v0.8.3 DeepResearch bridge enabled")
+except Exception as _stem_deep_bridge_exc:
+    logger.warning("STEM Source Registry DeepResearch bridge unavailable: %s", _stem_deep_bridge_exc)
+
+# STEM_SOURCE_DEEP_RESEARCH_BRIDGE_V0_8_2
+try:
+    from services.stem_sources import install_deep_research_bridge as _stem_install_deep_research_bridge
+    _stem_install_deep_research_bridge(DeepResearcher)
+    logger.info("STEM Source Registry v0.8.4 DeepResearch bridge enabled")
+except Exception as _stem_deep_bridge_exc:
+    logger.warning("STEM Source Registry DeepResearch bridge unavailable: %s", _stem_deep_bridge_exc)
