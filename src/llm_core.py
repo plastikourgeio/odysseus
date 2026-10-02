@@ -200,10 +200,10 @@ def _get_cache_key(url: str, model: str, messages: List[Dict],
     for msg in messages:
         sorted_items = tuple(sorted(msg.items()))
         hashable_messages.append(sorted_items)
-    
+
     content = json.dumps({
         'url': url,
-        'model': model, 
+        'model': model,
         'messages': hashable_messages,
         'temp': temperature,
         'max_tokens': max_tokens,
@@ -2415,13 +2415,126 @@ async def llm_call_async(
                 r = await httpx_post_kimi_aware_async(client, target_url, h, json=payload, timeout=call_timeout)
             duration = time.time() - start
             if not r.is_success:
+                if r.status_code == 429:
+                    try:
+                        import json as _json
+
+                        _payload_429 = r.json()
+                        _safe_keys_429 = {
+                            "status",
+                            "message",
+                            "reason",
+                            "quotaMetric",
+                            "quotaId",
+                            "quotaValue",
+                            "retryDelay",
+                        }
+                        _diag_429 = []
+
+                        def _walk_429(value):
+                            if isinstance(value, dict):
+                                for key, item in value.items():
+                                    if key in _safe_keys_429:
+                                        pair = [key, item]
+                                        if pair not in _diag_429:
+                                            _diag_429.append(pair)
+                                    _walk_429(item)
+                            elif isinstance(value, list):
+                                for item in value:
+                                    _walk_429(item)
+
+                        _walk_429(_payload_429)
+
+                        logger.warning(
+                            "Gemini 429 quota diagnostic: %s",
+                            _json.dumps(
+                                _diag_429[:40],
+                                ensure_ascii=False,
+                            ),
+                        )
+                    except Exception as _diag_error:
+                        logger.warning(
+                            "Gemini 429 quota diagnostic unavailable: %s",
+                            _diag_error,
+                        )
+
                 friendly = _format_upstream_error(r.status_code, r.text, target_url)
                 logger.warning(
                     f"LLM async call to {target_url} failed in {duration:.2f}s "
                     f"(attempt {attempt}): HTTP {r.status_code} {friendly}"
                 )
                 if r.status_code in (429, 502, 503, 504) and attempt < max_retries:
-                    await asyncio.sleep(LLMConfig.RETRY_DELAY)
+                    # Provider-aware retry/backoff.
+                    #
+                    # A fixed sub-second retry creates a retry storm when a
+                    # cloud provider returns 429. Prefer Retry-After or Google's
+                    # google.rpc.RetryInfo.retryDelay when supplied, otherwise
+                    # use exponential backoff.
+                    provider_delay = None
+
+                    retry_after = r.headers.get("retry-after")
+                    if retry_after:
+                        try:
+                            provider_delay = float(retry_after.strip())
+                        except (TypeError, ValueError):
+                            pass
+
+                    if r.status_code == 429:
+                        try:
+                            error_payload = r.json()
+                            details = (
+                                (error_payload.get("error") or {}).get("details")
+                                or []
+                            )
+                            for detail in details:
+                                if not isinstance(detail, dict):
+                                    continue
+
+                                raw_delay = detail.get("retryDelay")
+
+                                if (
+                                    isinstance(raw_delay, str)
+                                    and raw_delay.endswith("s")
+                                ):
+                                    try:
+                                        parsed_delay = float(raw_delay[:-1])
+                                    except ValueError:
+                                        continue
+
+                                    provider_delay = max(
+                                        provider_delay or 0.0,
+                                        parsed_delay,
+                                    )
+                        except Exception:
+                            pass
+
+                    if r.status_code == 429:
+                        fallback_delay = min(
+                            60.0,
+                            5.0 * (2 ** (attempt - 1)),
+                        )
+                    else:
+                        fallback_delay = min(
+                            15.0,
+                            2.0 * (2 ** (attempt - 1)),
+                        )
+
+                    retry_delay = max(
+                        fallback_delay,
+                        provider_delay or 0.0,
+                    )
+                    retry_delay = min(90.0, retry_delay)
+
+                    logger.warning(
+                        "Retrying LLM call after %.1fs "
+                        "(HTTP %s, attempt %d/%d)",
+                        retry_delay,
+                        r.status_code,
+                        attempt,
+                        max_retries,
+                    )
+
+                    await asyncio.sleep(retry_delay)
                     continue
                 raise HTTPException(r.status_code, friendly)
             logger.info(f"LLM async call to {target_url} succeeded in {duration:.2f}s (attempt {attempt})")

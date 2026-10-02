@@ -2,6 +2,5 @@ services:
   odysseus:
     volumes:
       - "/srv/docker/stacks/odysseus/local-patches/services/search/content.py:/app/services/search/content.py:ro"
-      - "/srv/docker/stacks/odysseus/local-patches/src/llm_core.py:/app/src/llm_core.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/src/deep_research.py:/app/src/deep_research.py:ro"
       - "/srv/docker/stacks/odysseus/local-patches/src/research_handler.py:/app/src/research_handler.py:ro"
